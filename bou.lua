@@ -9,9 +9,15 @@ local sceneName = ...
 local composer = require( "composer" )
 local gr3
 if(grade == "3")then
-gr3 = require("g3")
-else
- gr3 = require("gr2")
+	gr3 = require("g3")
+elseif(grade =="4")then
+	gr3 = require("gr4")
+elseif(grade =="5")then
+	gr3 = require("gr5")
+elseif(grade =="6")then
+	gr3 = require("gr6")
+elseif(grade =="7")then
+ gr3 = require("gr7")
 end
 local grTotal = gr3.total()
 -- Load scene with same root filename as this file
@@ -28,36 +34,7 @@ local colors ={{51/255, 204/255, 51/255},
 {255/255, 255/255, 51/255},
 {204/255, 102/255, 255/255}
 }
--- local h = 30
--- local w = 30
--- local blocks = {
--- {"a",h},
--- {"b",-2*h},
--- {"c",h},
--- {"d",-2*h},
--- {"e",h},
--- {"f",-2*h},
--- {"g",2*h},
--- {"h",-2*h},
--- {"i",-2*h},
--- {"j",2*h},
--- {"k",-2*h},
--- {"l",-2*h},
--- {"m",h},
--- {"n",h},
--- {"o",h},
--- {"p",2*h},
--- {"q",2*h},
--- {"r",h},
--- {"s",h},
--- {"t",-2*h},
--- {"u",h},
--- {"v",h},
--- {"w",h},
--- {"x",h},
--- {"y",2*h},
--- {"z",h}
--- }
+
 local prevWords = {}
 local canvas ={}
 local pieces = {}
@@ -67,6 +44,7 @@ local counter = 1
 local wordsGroup = display.newGroup()
 local linesGroup = display.newGroup()
 local bouGroup = display.newGroup()
+local tick
 local wordSound
 local wordChannel
 local isPlaying = false
@@ -104,7 +82,7 @@ local function getNextWord()
 		r = math.random(grTotal )
 		word = gr3.getWord(r)
 		
-		if(string.len(word)<3) then
+		if(string.len(word)<3 or string.len(word)>15) then
 				check =true
 		end
 		for i=1,#prevWords do
@@ -217,32 +195,13 @@ local function splitCheck(splitWord)
 		end
 	end
 end
-local function splitMCheck(splitWord)
-	
-	if(string.len(splitWord)<4)then
-		mpieces[#mpieces+1]=splitWord
-	else
-		local m1,m2 = splitDoubleConsonants(splitWord)
-		if(m1 ~= nil and m2 ~= nil)then
-			
-			splitMCheck(m1)
-			splitMCheck(m2)
-		else
-			--split on first vowel
-			local m1,m2 = splitFirstVowel(splitWord)
-			if(m1 ~= nil and m2 ~= nil)then
-				splitMCheck(m1)
-				splitMCheck(m2)
-			end
-		end
-	end
-end
+
 local function drawLines()
 	linesGroup.anchorChildren = true
 	linesGroup.anchorX = 0.5
 	linesGroup.anchorY = 0
 	linesGroup.x = display.contentWidth / 2
-	linesGroup.y = display.contentHeight - yInset *4
+	linesGroup.y = display.contentHeight - yInset *6.5
 	
 	local i =1
 	for k=1,#pieces do
@@ -252,35 +211,42 @@ local function drawLines()
 		
 		for j=1,wordSize do
 			
-			local dash = display.newLine(i*(xInset),yInset*5, i*(xInset) + 15,yInset*5)
+			local dash = display.newLine(i*(xInset),0, i*(xInset) + 15,0)
 			dash:setStrokeColor(255/255, 51/255, 204/255)
 			dash.strokeWidth = 2
 			linesGroup:insert(dash)
 			local options = 
 			{
 				--parent = textGroup,
-				text = " ",     
+				text = part:sub(j,j),     
 				--x = 0,
 				--y = 200,
 				--width = 128,     --required for multi-line and alignment
 				font = "TeachersPet",   
-				fontSize = 20,
+				fontSize = 28,
 				align = "right"  --new alignment parameter
 			}
 
 			local myText = display.newText( options )
 			myText.anchorX =0
 			myText.anchorY =0
-			myText.alpha = 1
+			myText.alpha = 0
 			myText.x = i*(xInset)
-			myText.y = yInset * 3.5
+			myText.y = -yInset*2
 			myText:setFillColor( 0, 0, 0 )
 			myText.pos = k
 			tospell[i] = myText
 			linesGroup:insert(tospell[i])
 			i=i+1
 		end
+		
 	end
+	tick = display.newImage("icon8.png")
+	tick.y = -yInset
+	tick:scale((xInset/1.1)/tick.contentWidth,(xInset/1.1)/tick.contentWidth)
+	tick.x = (string.len(word)+1)*xInset + 15
+	tick.alpha = 0
+	linesGroup:insert(tick)
 end
 
 local function Next()
@@ -310,80 +276,12 @@ local function Next()
 				splitCheck(s2)
 			end
 		end
-		--drawLines()
-		
-		
-		local function drag( event )
-			if event.phase == "began" then
-				collided = false
-				markX = event.target.x    -- store x location of object
-				markY = event.target.y    -- store y location of object
-				
-				display.getCurrentStage():setFocus( event.target )
-			elseif event.phase == "moved" then
-			
-				local x = (event.x - event.xStart) + markX
-				local y = (event.y - event.yStart) + markY
-				
-				event.target.x, event.target.y = x, y    -- move object based on calculations above
-			elseif event.phase == "ended" or event.phase == "cancelled" then
-				event.target.alpha = 1
-				
-				
-				--print(event.target.pos)
-				if(event.target.pos~= nil)then
-					if(hasCollided(event.target,event.target.rectangle))then
-						event.target.alpha = 0
-						tospell[event.target.pos].alpha = 1
-						collided = true
-				
-					end
-				
-					
-				end
-				if(event.x > xInset*15 or event.x < xInset * 5)then
-						transition.to(event.target,{time = 500,x=markX,y=markY})
-					
-				elseif(event.y>yInset*15 or event.y < yInset)then
-						transition.to(event.target,{time = 500,x=markX,y=markY})
-				end
-				display.getCurrentStage():setFocus(nil)
-				print(#pieces)
-				if(collided)then
-					if(counter == #pieces)then
-					
-						
-						wordComplete = true
-						timer.performWithDelay(2500,function()
-						wordsGroup:removeSelf()
-						wordsGroup = nil
-						wordsGroup = display.newGroup()
-						bouGroup:insert(wordsGroup)
-						pieces = {}
-						mpieces ={}
-						tospell = {}
-						canvas ={}
-						--isPlaying = true
-						Next()
-						--isPlaying = true
-						end)
-						
-						
-						counter = 1
-					else
-						counter = counter + 1
-					end
-				
-				end
-			end
-			
-			return true
-		end
+		drawLines()
 		
 		local matchGroup = display.newGroup()
 		wordsGroup:insert(matchGroup)
 		local prevX = 0
-		local c = 0
+		local c = math.random(4)
 		for i=1,#pieces do
 			local pieceGroup = display.newGroup()
 			local r = math.random(5)
@@ -409,10 +307,10 @@ local function Next()
 			local canvasCollided = false
 			while  canvasCollided==false do
 				canvasCollided = true
-				local xPos = math.random(display.contentWidth - xInset*10)+ xInset*5
-				local yPos =  math.random(display.contentHeight - yInset*10)+ yInset
-				myText.x =xPos
-				myText.y = yPos
+				local xPos = math.random(3)
+				local yPos =  math.random(3)
+				myText.x =xInset*xPos*3+xInset*3
+				myText.y = yInset*yPos*3-yInset
 				local length = myText.contentWidth + 20
 				local height = myText.contentHeight + 20
 				local rect = display.newRect(myText.x-5,myText.y +height/2,length+ 10,height+10)
@@ -425,7 +323,46 @@ local function Next()
 				end
 				rect:removeSelf()
 			end
-		
+			local function myTap(event)
+				
+				if(event.target.pos == counter)then
+					event.target.alpha = 0
+					for i=1,#tospell do
+						if(event.target.pos==tospell[i].pos)then
+							tospell[i].alpha = 1
+						end
+					end
+					if(counter == #pieces)then
+					
+						tick.alpha = 1
+						wordComplete = true
+						timer.performWithDelay(2500,function()
+						linesGroup:removeSelf()
+						linesGroup=nil
+						linesGroup = display.newGroup()
+						wordsGroup:removeSelf()
+						wordsGroup = nil
+						wordsGroup = display.newGroup()
+						bouGroup:insert(wordsGroup)
+						bouGroup:insert(linesGroup)
+						pieces = {}
+						mpieces ={}
+						tospell = {}
+						canvas ={}
+						--isPlaying = true
+						Next()
+						--isPlaying = true
+						end)
+						
+						
+						counter = 1
+					else
+						counter = counter + 1
+					end
+				end
+				
+				return true
+			end
 			
 			--
 			if(c<5)then
@@ -446,46 +383,9 @@ local function Next()
 			pieceGroup.pos = i
 		
 			canvas[#canvas+1] = rect 
-			local rect = display.newRect(prevX -5,0,length+ 10,height+10)
-			
-			rect.anchorX =0
-			rect.anchorY = 0.5
-			rect:setFillColor(color[1],color[2],color[3])
-			pieceGroup.rectangle = rect
-			
-			matchGroup.anchorChildren = true
-			matchGroup.anchorX = 0.5
-			matchGroup.anchorY = 0
-			matchGroup:insert(rect)
-			local options = 
-			{
-				--parent = textGroup,
-				text = pieces[i],     
-				--x = 0,
-				--y = 200,
-				--width = 128,     --required for multi-line and alignment
-				font = "TeachersPet",   
-				fontSize = 36,
-				align = "right"  --new alignment parameter
-			}
-
-			myText = display.newText( options )
-			myText.anchorX =0
-			myText.anchorY =0.5
-			myText.alpha = 0
-			myText.pos = i
-			myText.x = prevX
-			myText.y = 0
-			myText:setFillColor( 0, 0, 0 )
-			tospell[#tospell+1] = myText
-			matchGroup:insert(myText)
-			matchGroup.x = display.contentWidth / 2
-			matchGroup.y = display.contentHeight - yInset*4
-			prevX = prevX + length + 15
-			
 			wordsGroup:insert(pieceGroup)
 			
-			pieceGroup:addEventListener( "touch", drag )
+			pieceGroup:addEventListener( "touch", myTap )
 		end
 end
 function scene:create( event )
@@ -503,7 +403,7 @@ function scene:create( event )
 		
 		local xander = display.newImage("1.png")
 		xander.x = display.contentWidth - xInset*2
-		xander.y = display.contentHeight - yInset*2
+		xander.y = display.contentHeight/2 
 		xander:scale(xInset*2.5/xander.contentWidth,xInset*2.5/xander.contentWidth)
 		xanderGroup:insert(xander)
 		
@@ -522,12 +422,12 @@ function scene:create( event )
 	    local myText = display.newText( options )
 		myText.anchorY =0.5
 		myText.alpha = 1
-		myText.x = display.contentWidth - xInset*4.5
-		myText.y = display.contentHeight - yInset*5.5 - 4.5
+		myText.x = display.contentWidth - xInset*2.5
+		myText.y = display.contentHeight/2 -yInset*5 - 4.5
 		myText:setFillColor( 1, 1, 1 )
 		local speechBox = display.newImage("speechbox.png")
-		speechBox.x = display.contentWidth - xInset*4.5
-		speechBox.y = display.contentHeight - yInset*5.5
+		speechBox.x = display.contentWidth - xInset*2.5
+		speechBox.y = display.contentHeight/2 -yInset*5
 		speechBox:scale(-(myText.contentWidth+10)/speechBox.contentWidth,yInset*2/speechBox.contentHeight)
 		xanderGroup:insert(speechBox)
 		xanderGroup:insert(myText)
@@ -535,7 +435,7 @@ function scene:create( event )
 		bouGroup:insert(xanderGroup)
 		menuGroup = display.newGroup()
 		local mCircle = display.newImage("home.png")
-		mCircle:scale(xInset*2/mCircle.width,xInset*2/mCircle.width)
+		mCircle:scale(xInset*1.5/mCircle.width,xInset*1.5/mCircle.width)
 		--mCircle:setFillColor( 255/255, 51/255, 204/255 )
 		menuGroup:insert(mCircle)
 		menuGroup.x =  xInset*2
@@ -543,7 +443,7 @@ function scene:create( event )
 		menuGroup:addEventListener( "tap", gotoHome )
 		bouGroup:insert(menuGroup)
 		local soundButton = display.newImage("Sound.png")
-		soundButton:scale(xInset*2/soundButton.width,xInset*2/soundButton.width)
+		soundButton:scale(xInset*1.5/soundButton.width,xInset*1.5/soundButton.width)
 		soundButton.x = xInset*2
 		soundButton.y = display.contentHeight - yInset*2
 		local function playWord(event)

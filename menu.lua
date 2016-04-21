@@ -132,10 +132,18 @@ function scene:create( event )
 		
 		settingsGroup:addEventListener( "tap", gotoSettings )
 		end)
-		local sCircle = display.newImage("SpelDesign.png")
-		local bCircle = display.newImage("tetris.png")
-		local wCircle = display.newImage("wordsearchIcon.png")
-		local fCircle = display.newImage("FlashIcon.png")
+		--local sCircle = display.newImage("SpelDesign.png")
+		local sCircle = display.newCircle(0,0,xInset*4)
+		sCircle:setFillColor(140/255, 198/255, 63/255)
+		--local bCircle = display.newImage("tetris.png")
+		local bCircle = display.newCircle(0,0,xInset*4)
+		bCircle:setFillColor(127/255, 205/255, 238/255)
+		--local wCircle = display.newImage("wordsearchIcon.png")
+		local wCircle = display.newCircle(0,0,xInset*4)
+		wCircle:setFillColor(251/255, 176/255, 59/255)
+		--local fCircle = display.newImage("FlashIcon.png")
+		local fCircle = display.newCircle(0,0,xInset*4)
+		fCircle:setFillColor(255/255, 51/255, 204/255)
 		bCircle:scale(xInset*4/bCircle.width,xInset*4/bCircle.height)
 		sCircle:scale(xInset*4/sCircle.width,xInset*4/sCircle.height)
 		fCircle:scale(xInset*4/fCircle.width,xInset*4/fCircle.height)
@@ -143,12 +151,12 @@ function scene:create( event )
 		local soptions = 
 		{
 			--parent = textGroup,
-			text = "",     
+			text = "Spel",     
 			--x = 0,
 			--y = 200,
-			--width = 62,     --required for multi-line and alignment
+			--width = xInset*3,     --required for multi-line and alignment
 			font = "TeachersPet",   
-			fontSize = 20,
+			fontSize = 28,
 			align = "right"  --new alignment parameter
 		}
 		
@@ -156,16 +164,16 @@ function scene:create( event )
 		sText.anchorX =0.5
 		sText.anchorY =0.5
 		sText.alpha = 1
-		sText:setFillColor( 0, 0, 0 )
+		sText:setFillColor( 1, 1, 1 )
 		local boptions = 
 		{
 			--parent = textGroup,
-			text = "",     
+			text = "Bou",     
 			--x = 0,
 			--y = 200,
-			--width = 62,     --required for multi-line and alignment
+			--width = xInset*3,     --required for multi-line and alignment
 			font = "TeachersPet",   
-			fontSize = 20,
+			fontSize = 28,
 			align = "right"  --new alignment parameter
 		}
 
@@ -173,16 +181,16 @@ function scene:create( event )
 		bText.anchorX =0.5
 		bText.anchorY =0.5
 		bText.alpha = 1
-		bText:setFillColor( 0, 0, 0 )
+		bText:setFillColor( 1, 1, 1 )
 		local woptions = 
 		{
 			--parent = textGroup,
-			text = "",     
+			text = "Woordesoek",     
 			--x = 0,
 			--y = 200,
-			--width = 62,     --required for multi-line and alignment
+			--width = xInset*3,     --required for multi-line and alignment
 			font = "TeachersPet",   
-			fontSize = 20,
+			fontSize = 28,
 			align = "right"  --new alignment parameter
 		}
 
@@ -190,16 +198,16 @@ function scene:create( event )
 		wText.anchorX =0.5
 		wText.anchorY =0.5
 		wText.alpha = 1
-		wText:setFillColor( 0, 0, 0 )
+		wText:setFillColor( 1, 1, 1 )
 		local foptions = 
 		{
 			--parent = textGroup,
-			text = "",     
+			text = "Flits kaarte",     
 			--x = 0,
 			--y = 200,
-			--width = 62,     --required for multi-line and alignment
+			--width = xInset*3,     --required for multi-line and alignment
 			font = "TeachersPet",   
-			fontSize = 20,
+			fontSize = 28,
 			align = "right"  --new alignment parameter
 		}
 
@@ -207,15 +215,15 @@ function scene:create( event )
 		fText.anchorX =0.5
 		fText.anchorY =0.5
 		fText.alpha = 1
-		fText:setFillColor( 0, 0, 0 )
+		fText:setFillColor( 1, 1, 1 )
 		spelGroup:insert(sCircle)
-		--spelGroup:insert(sText)
+		spelGroup:insert(sText)
 		bouGroup:insert(bCircle)
-		--bouGroup:insert(bText)
+		bouGroup:insert(bText)
 		wordsearchGroup:insert(wCircle)
-		--wordsearchGroup:insert(wText)
+		wordsearchGroup:insert(wText)
 		flashGroup:insert(fCircle)
-		--flashGroup:insert(fText)
+		flashGroup:insert(fText)
 		flashGroup.anchorChildren = true
 		flashGroup.anchorX = 0.5
 		flashGroup.anchorY = 0.5

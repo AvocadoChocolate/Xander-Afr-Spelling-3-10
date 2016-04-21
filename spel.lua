@@ -1,10 +1,16 @@
 local composer = require( "composer" )
 require("onScreenKeyboard") -- include the onScreenKeyboard.lua file
 local gr3
-if(grade == "1")then
+if(grade == "3")then
 	gr3 = require("g3")
-else
- gr3 = require("g3")
+elseif(grade =="4")then
+	gr3 = require("gr4")
+elseif(grade =="5")then
+	gr3 = require("gr5")
+elseif(grade =="6")then
+	gr3 = require("gr6")
+elseif(grade =="7")then
+ gr3 = require("gr7")
 end
 local gr1Total = gr3.total() + 53
 local gr2Total = gr3.total() + 50
@@ -85,7 +91,9 @@ local function getNextWord()
 	word = string.lower( word )
 	return word
 end
-local word = getNextWord()
+if(word==nil)then
+ word = getNextWord()
+end
 --Developer mode
 local function developerMode()
 		local options = 
@@ -323,7 +331,7 @@ local function redrawKeyboard()
 								spelGroup:insert(xanderGroup)
 								
 								
-								--if(grade == "1")then
+								if(tonumber(grade) < 7)then
 									print(grTotal)
 									if(tonumber(correct)<=100)then
 									correct = correct + 1
@@ -352,12 +360,12 @@ local function redrawKeyboard()
 											xander.y = display.contentHeight - yInset*12
 											xander:scale(xInset*2.5/xander.contentWidth,xInset*2.5/xander.contentWidth)
 											spelGroup:insert(xander)
-											
+											local nextGrade =  tonumber(grade)+1
 											
 											local options = 
 											{
 												--parent = row,
-												text = "Veelsgeluk! Wil jy graad "..grade.." doen?",     
+												text = "Veelsgeluk! Wil jy graad "..nextGrade.." doen?",     
 												--x = 0,
 												--y = 200,
 												width = 180,     --required for multi-line and alignment
@@ -527,210 +535,210 @@ local function redrawKeyboard()
 									if(tonumber(correct)>100)then
 									correct = grTotal
 									end
-								-- else
-									-- if(tonumber(correct)<=gr2Total)then
-									-- correct = correct + 1
-									-- end
-									-- if(tonumber(correct)==gr2Total)then
-									-- ------------------------------------------------------------------------------------Graduate Grade 1
+								else
+									if(tonumber(correct)<= 100)then
+									correct = correct + 1
+									end
+									if(tonumber(correct)== 100)then
+									------------------------------------------------------------------------------------Graduate Grade 1
 									
-											-- if(keyboard~=nil)then
-												-- keyboard:destroy()
-												-- keyboard = nil
-											-- end
-											-- local back = display.newRect(0,0,display.contentWidth,display.contentWidth)
-											-- back.anchorX = 0
-											-- back.anchorY = 0
-											-- back:setFillColor(0)
-											-- back.alpha = 0.4
-											-- back:toFront()
-											-- -- back.isHitTestable = false
-											-- local function block(event)
-												-- return true
-											-- end
-											-- back:addEventListener("tap",block)
-											-- spelGroup:insert(back)
-											-- local xander = display.newImage("2-reverse.png")
-											-- xander.x = display.contentWidth  / 2 - xInset * 2.2
-											-- xander.y = display.contentHeight - yInset*12
-											-- xander:scale(xInset*2.5/xander.contentWidth,xInset*2.5/xander.contentWidth)
-											-- spelGroup:insert(xander)
+											if(keyboard~=nil)then
+												keyboard:destroy()
+												keyboard = nil
+											end
+											local back = display.newRect(0,0,display.contentWidth,display.contentWidth)
+											back.anchorX = 0
+											back.anchorY = 0
+											back:setFillColor(0)
+											back.alpha = 0.4
+											back:toFront()
+											-- back.isHitTestable = false
+											local function block(event)
+												return true
+											end
+											back:addEventListener("tap",block)
+											spelGroup:insert(back)
+											local xander = display.newImage("2-reverse.png")
+											xander.x = display.contentWidth  / 2 - xInset * 2.2
+											xander.y = display.contentHeight - yInset*12
+											xander:scale(xInset*2.5/xander.contentWidth,xInset*2.5/xander.contentWidth)
+											spelGroup:insert(xander)
 											
 											
-											-- local options = 
-											-- {
-												-- -- parent = row,
-												-- text = "Veelsgeluk! Kry ons Graad 8 - 12 Spelling App",     
-												-- -- x = 0,
-												-- -- y = 200,
-												-- width = 180,     --required for multi-line and alignment
-												-- font = "TeachersPet",   
-												-- fontSize = 28,
-												-- align = "left"  --new alignment parameter
-											-- }
-											
-											-- confirmText = display.newText( options )
-											-- -- confirmText.anchorX =0.5
-											-- -- confirmText.anchorY =0
-											-- confirmText.alpha = 1
-											-- confirmText.x = display.contentWidth  / 2 + xInset * 3
-											-- confirmText.y = display.contentHeight - yInset*15 - 10
-											-- confirmText:setFillColor( 1, 1, 1 )
-											-- local speechBox = display.newImage("speechbox.png")
-											-- speechBox.x = display.contentWidth  / 2 + xInset * 3
-											-- speechBox.y = display.contentHeight - yInset*15
-											-- speechBox:scale((confirmText.width+20)/speechBox.contentWidth,(confirmText.height+25)/speechBox.contentHeight)
-											-- spelGroup:insert(speechBox)
-											-- spelGroup:insert(confirmText)
-											-- -- local yes  = display.newRoundedRect(display.contentWidth / 2 - xInset*2 - 5,display.contentHeight - yInset*8,xInset*2,yInset*2,4)
-											-- -- yes.anchorX = 0.5
-											-- -- yes.anchorY = 0
-											-- yes.strokeWidth = 2
-											-- -- yes:setFillColor( 255/255, 51/255, 204/255)
-											-- yes:setStrokeColor( 255/255, 51/255, 204/255 )
-											-- -- spelGroup:insert(yes)
-											-- local no  = display.newRoundedRect(display.contentWidth / 2 + xInset*2 + 5,display.contentHeight - yInset*8,xInset*2,yInset*2,4)
-											-- no.anchorX = 0.5
-											-- no.anchorY = 0
-											-- -- yes.strokeWidth = 2
-											-- no:setFillColor( 255/255, 51/255, 204/255)
-											-- -- yes:setStrokeColor( 255/255, 51/255, 204/255 )
-											-- spelGroup:insert(no)
-											-- -- local options = 
-											-- -- {
+											local options = 
+											{
 												-- parent = row,
-												-- -- text = "JA",     
+												text = "Veelsgeluk! Kry ons Graad 8 - 12 Spelling App",     
 												-- x = 0,
 												-- y = 200,
-												-- width = 128,     --required for multi-line and alignment
-												-- -- font = "TeachersPet",   
-												-- -- fontSize = 28,
-												-- -- align = "right"  --new alignment parameter
-											-- -- }
-
-											-- -- yesText = display.newText( options )
-											-- -- yesText.anchorX =0.5
-											-- -- yesText.anchorY =0
-											-- -- yesText.alpha = 1
-											-- -- yesText.x = display.contentWidth / 2 -xInset*2 - 5
-											-- -- yesText.y = display.contentHeight - yInset*8+ 8
-											-- -- yesText:setFillColor( 1, 1, 1 )
-											-- -- spelGroup:insert(yesText)
+												width = 180,     --required for multi-line and alignment
+												font = "TeachersPet",   
+												fontSize = 28,
+												align = "left"  --new alignment parameter
+											}
+											
+											confirmText = display.newText( options )
+											-- confirmText.anchorX =0.5
+											-- confirmText.anchorY =0
+											confirmText.alpha = 1
+											confirmText.x = display.contentWidth  / 2 + xInset * 3
+											confirmText.y = display.contentHeight - yInset*15 - 10
+											confirmText:setFillColor( 1, 1, 1 )
+											local speechBox = display.newImage("speechbox.png")
+											speechBox.x = display.contentWidth  / 2 + xInset * 3
+											speechBox.y = display.contentHeight - yInset*15
+											speechBox:scale((confirmText.width+20)/speechBox.contentWidth,(confirmText.height+25)/speechBox.contentHeight)
+											spelGroup:insert(speechBox)
+											spelGroup:insert(confirmText)
+											-- local yes  = display.newRoundedRect(display.contentWidth / 2 - xInset*2 - 5,display.contentHeight - yInset*8,xInset*2,yInset*2,4)
+											-- yes.anchorX = 0.5
+											-- yes.anchorY = 0
+											--yes.strokeWidth = 2
+											-- yes:setFillColor( 255/255, 51/255, 204/255)
+											--yes:setStrokeColor( 255/255, 51/255, 204/255 )
+											-- spelGroup:insert(yes)
+											local no  = display.newRoundedRect(display.contentWidth / 2 + xInset*2 + 5,display.contentHeight - yInset*8,xInset*2,yInset*2,4)
+											no.anchorX = 0.5
+											no.anchorY = 0
+											-- yes.strokeWidth = 2
+											no:setFillColor( 255/255, 51/255, 204/255)
+											-- yes:setStrokeColor( 255/255, 51/255, 204/255 )
+											spelGroup:insert(no)
 											-- local options = 
 											-- {
-												-- -- parent = row,
-												-- text = "OK",     
-												-- -- x = 0,
-												-- -- y = 200,
-												-- -- width = 128,     --required for multi-line and alignment
+												--parent = row,
+												-- text = "JA",     
+												--x = 0,
+												--y = 200,
+												--width = 128,     --required for multi-line and alignment
 												-- font = "TeachersPet",   
 												-- fontSize = 28,
 												-- align = "right"  --new alignment parameter
 											-- }
 
-											-- noText = display.newText( options )
-											-- noText.anchorX =0.5
-											-- noText.anchorY =0
-											-- noText.alpha = 1
-											-- noText.x = display.contentWidth / 2 + xInset*2 + 5
-											-- noText.y = display.contentHeight - yInset*8 + 8
-											-- noText:setFillColor( 1, 1, 1 )
-											-- spelGroup:insert(noText)
-											-- local function cancel(event)
-												-- ------------------------------------------------------------------------------------------------Maak graduation op kies speler beskikbaar
+											-- yesText = display.newText( options )
+											-- yesText.anchorX =0.5
+											-- yesText.anchorY =0
+											-- yesText.alpha = 1
+											-- yesText.x = display.contentWidth / 2 -xInset*2 - 5
+											-- yesText.y = display.contentHeight - yInset*8+ 8
+											-- yesText:setFillColor( 1, 1, 1 )
+											-- spelGroup:insert(yesText)
+											local options = 
+											{
+												-- parent = row,
+												text = "OK",     
+												-- x = 0,
+												-- y = 200,
+												-- width = 128,     --required for multi-line and alignment
+												font = "TeachersPet",   
+												fontSize = 28,
+												align = "right"  --new alignment parameter
+											}
+
+											noText = display.newText( options )
+											noText.anchorX =0.5
+											noText.anchorY =0
+											noText.alpha = 1
+											noText.x = display.contentWidth / 2 + xInset*2 + 5
+											noText.y = display.contentHeight - yInset*8 + 8
+											noText:setFillColor( 1, 1, 1 )
+											spelGroup:insert(noText)
+											local function cancel(event)
+												------------------------------------------------------------------------------------------------Maak graduation op kies speler beskikbaar
 												
 												
-												-- back:removeSelf()
-												-- back=nil
-												-- confirmText:removeSelf()
-												-- confirmText = nil
-												-- -- yes:removeSelf()
-												-- -- yes = nil
-												-- no:removeSelf()
-												-- no = nil
-												-- -- yesText:removeSelf()
-												-- -- yesText = nil
-												-- noText:removeSelf()
-												-- noText = nil
-												-- xander:removeSelf()
-												-- xander = nil
-												-- speechBox:removeSelf()
-												-- speechBox=nil
-												-- menuGroup:removeEventListener("tap",gotoHome)
-												-- timer.performWithDelay( 500, function() 
-												-- word = getNextWord()
-												-- -- myText.text = word
-												-- wordTyped = ""
-												-- tospell = {}
-												-- linesGroup:removeSelf()
-												-- linesGroup = nil
-												-- linesGroup = display.newGroup()
-												-- redrawKeyboard()
-												-- drawLines()
-												-- counter = 1
-												-- spelGroup:insert(linesGroup)
-												-- Correctioncounter = 1
-												-- correctionTable = {}
-												-- correction = false
-												-- menuGroup:addEventListener( "tap", gotoHome )
-												-- end)
+												back:removeSelf()
+												back=nil
+												confirmText:removeSelf()
+												confirmText = nil
+												-- yes:removeSelf()
+												-- yes = nil
+												no:removeSelf()
+												no = nil
+												-- yesText:removeSelf()
+												-- yesText = nil
+												noText:removeSelf()
+												noText = nil
+												xander:removeSelf()
+												xander = nil
+												speechBox:removeSelf()
+												speechBox=nil
+												menuGroup:removeEventListener("tap",gotoHome)
+												timer.performWithDelay( 500, function() 
+												word = getNextWord()
+												-- myText.text = word
+												wordTyped = ""
+												tospell = {}
+												linesGroup:removeSelf()
+												linesGroup = nil
+												linesGroup = display.newGroup()
+												redrawKeyboard()
+												drawLines()
+												counter = 1
+												spelGroup:insert(linesGroup)
+												Correctioncounter = 1
+												correctionTable = {}
+												correction = false
+												menuGroup:addEventListener( "tap", gotoHome )
+												end)
+												return true
+											end
+											no:addEventListener("tap",cancel)
+											-- local function confirmed(event)
+												
+												-- grade = "2"
+												-- correct = 0
+												-- transition.to(menuGroup,{time = 100, alpha = 0,onComplete =function() 
+													-- transition.to(menuGroup,{time = 100, alpha = 1})
+													-- end})
+												-- transition.to(spelGroup,{time=500,y = 2*display.contentHeight,onComplete = function() 
+												-- transition.to(spelGroup,{time=500,y = 0})
+												-- end})
+												-- composer.removeScene("spel")
+												-- composer.gotoScene("menu",{time = 500,effect="fromTop"}) 
+												
+												-- addAndSaveIncorrectWords(list)
+												
+												-- playersList[cur].grade = grade
+												-- playersList[cur].correct = correct
+												-- playersList[cur].incorrect = incorrect
+												-- addAndSavePlayers(playersList)
+												-- if(keyboard~=nil)then
+													-- keyboard:destroy()
+													-- keyboard = nil
+												-- end
 												-- return true
 											-- end
-											-- no:addEventListener("tap",cancel)
-											-- -- local function confirmed(event)
-												
-												-- -- grade = "2"
-												-- -- correct = 0
-												-- -- transition.to(menuGroup,{time = 100, alpha = 0,onComplete =function() 
-													-- -- transition.to(menuGroup,{time = 100, alpha = 1})
-													-- -- end})
-												-- -- transition.to(spelGroup,{time=500,y = 2*display.contentHeight,onComplete = function() 
-												-- -- transition.to(spelGroup,{time=500,y = 0})
-												-- -- end})
-												-- -- composer.removeScene("spel")
-												-- -- composer.gotoScene("menu",{time = 500,effect="fromTop"}) 
-												
-												-- -- addAndSaveIncorrectWords(list)
-												
-												-- -- playersList[cur].grade = grade
-												-- -- playersList[cur].correct = correct
-												-- -- playersList[cur].incorrect = incorrect
-												-- -- addAndSavePlayers(playersList)
-												-- -- if(keyboard~=nil)then
-													-- -- keyboard:destroy()
-													-- -- keyboard = nil
-												-- -- end
-												-- -- return true
-											-- -- end
 											
-											-- -- yes:addEventListener("tap",confirmed)
-									-- else
-										-- if(#prevWords < 5) then
-										-- prevWords[#prevWords + 1] = word
-										-- else
-											-- prevWords = {}
-											-- prevWords[#prevWords + 1] = word
-										-- end
-										-- menuGroup:removeEventListener("tap",gotoHome)
-										-- timer.performWithDelay( 2000, function() 
-										-- word = getNextWord()
-										-- -- myText.text = word
-										-- wordTyped = ""
-										-- tospell = {}
-										-- linesGroup:removeSelf()
-										-- linesGroup = nil
-										-- linesGroup = display.newGroup()
-										-- redrawKeyboard()
-										-- drawLines()
-										-- counter = 1
-										-- spelGroup:insert(linesGroup)
-										-- menuGroup:addEventListener( "tap", gotoHome )
-										-- end)
-									-- end
-									-- if(tonumber(correct)>gr2Total)then
-									-- correct = gr2Total
-									-- end
-								-- end
+											-- yes:addEventListener("tap",confirmed)
+									else
+										if(#prevWords < 5) then
+										prevWords[#prevWords + 1] = word
+										else
+											prevWords = {}
+											prevWords[#prevWords + 1] = word
+										end
+										menuGroup:removeEventListener("tap",gotoHome)
+										timer.performWithDelay( 2000, function() 
+										word = getNextWord()
+										-- myText.text = word
+										wordTyped = ""
+										tospell = {}
+										linesGroup:removeSelf()
+										linesGroup = nil
+										linesGroup = display.newGroup()
+										redrawKeyboard()
+										drawLines()
+										counter = 1
+										spelGroup:insert(linesGroup)
+										menuGroup:addEventListener( "tap", gotoHome )
+										end)
+									end
+									if(tonumber(correct)>100)then
+									correct = 100
+									end
+								end
 								
 								
 								

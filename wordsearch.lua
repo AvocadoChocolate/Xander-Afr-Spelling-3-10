@@ -10,8 +10,14 @@ local composer = require( "composer" )
 local gr3
 if(grade == "3")then
 	gr3 = require("g3")
-else
-	gr3 = require("gr2")
+elseif(grade =="4")then
+	gr3 = require("gr4")
+elseif(grade =="5")then
+	gr3 = require("gr5")
+elseif(grade =="6")then
+	gr3 = require("gr6")
+elseif(grade =="7")then
+ gr3 = require("gr7")
 end
 local grTotal = gr3.total()
 -- Load scene with same root filename as this file
@@ -21,9 +27,9 @@ local scene = composer.newScene( sceneName )
 local isTouched = false
 local counter = 1
 local rows = 12
-local curRow = 1
+local curRow = math.random(12)
 local columns = 12
-local curColumn = 1
+local curColumn = math.random(12)
 local pcounter = 1
 local correctCounter =1
 local SW = 10
@@ -120,16 +126,18 @@ end
 local function nextStep()
 	rNext = math.random()
 	rnum = math.random()
+	curRow = math.random(12)
+	curColumn = math.random(12)
 	--print("next"..rnum)
-	if(curColumn==columns)then
-		curRow = curRow + 1
-		if(curRow>rows)then
-			curRow = 1
-		end
-		curColumn = 1
-	else
-		curColumn= curColumn+1
-	end
+	-- if(curColumn==columns)then
+		-- curRow = curRow + 1
+		-- if(curRow>rows)then
+			-- curRow = 1
+		-- end
+		-- curColumn = 1
+	-- else
+		-- curColumn= curColumn+1
+	-- end
 end
 local function tryHPlacement()
 	if(curRow<(rows - #words[counter])+1)then
@@ -148,6 +156,7 @@ local function tryHPlacement()
 		end		
 		--print(placement)
 		if(placement)then
+			print(placement)
 			rnum = math.random()
 			for i=1,#words[counter] do
 			
@@ -161,14 +170,14 @@ local function tryHPlacement()
 				curRow=curRow+1
 			end
 			counter=counter+1
-			pcounter = pcounter + 1
+			
 			countH = countH + 1
 		else
-		nextStep()
+			nextStep()
 		end
 	else
 		
-		nextStep()
+			nextStep()
 		
 	end
 end
@@ -189,6 +198,7 @@ local function tryVPlacement()
 		end	
 		--print(placement)		
 		if(placement)then
+		 print(placement)
 			rnum = math.random()
 			for i=1,#words[counter] do
 				matrix[curColumn][curRow] = words[counter]:sub(i,i)
@@ -201,14 +211,22 @@ local function tryVPlacement()
 				curColumn=curColumn+1
 			end
 			counter=counter+1
-			pcounter = pcounter + 1
+			
 			countV = countV + 1
 		else
-		nextStep()
+			if(countH>2)then
+				nextStep()
+			else
+				tryHPlacement()
+			end
 		end
 	else
 		
-			nextStep()
+			if(countH>2)then
+				nextStep()
+			else
+				tryHPlacement()
+			end
 		
 	end
 end
@@ -232,6 +250,7 @@ local function tryDPlacement()
 		end	
 		--print(placement)		
 		if(placement)then
+		    print(placement)
 			rnum = math.random()
 			for i=1,#words[counter] do
 				matrix[curColumn][curRow] = words[counter]:sub(i,i)
@@ -245,14 +264,22 @@ local function tryDPlacement()
 				curRow = curRow+1
 			end
 			counter=counter+1
-			pcounter = pcounter + 1
+			
 			countD = countD + 1
 		else
-		nextStep()
+			if(countV>2) then
+			nextStep()
+			else
+			tryVPlacement()
+			end
 		end
 	else
 		
+			if(countV>2) then
 			nextStep()
+			else
+			tryVPlacement()
+			end
 		
 	end
 end
@@ -503,42 +530,98 @@ function scene:create( event )
 		--   if(rNext<0.1)then
 				--Go to next step
 				--print("next"..rnum)
-				
-				
-		   if(rnum<0.33) then
-				--Place horizontal or vertical
-					
-					--print(pcounter.." 2 H 3 V")
-				if(randff<0.5 or countH>2)then
-					nextStep()
-					randff = math.random()
+			pcounter=pcounter+1
+			if(curColumn<6 and curRow<6)then
+				if(rnum<0.5)then
+				print("D")
+				tryDPlacement()
 				else
-					tryHPlacement()
-					randff = math.random()
-				end
-				
-			elseif(rnum<0.66) then
-					--print("tryVPlacement"..rnum)
-					--print(pcounter.." 3 H 2 V")
-					
-				if(randff<0.5 or countD>3)then
-					nextStep()
-					randff = math.random()
-				else
-					tryDPlacement()
-					randff = math.random()
+					if(rnum<0.8)then
+						print("V")
+						if(countV>2)then
+						nextStep()
+						else
+						tryVPlacement()
+						end
+					else
+						print("H")
+						if(countH>2)then
+						nextStep()
+						else
+						tryHPlacement()
+						end
+					end
 				end
 			else
-				if(randff<0.5 or countV>2)then
+				if(rnum<0.5)then
+					print("V")
+					if(countV>2)then
 					nextStep()
-					randff = math.random()
-				else
+					else
 					tryVPlacement()
-					randff = math.random()
+					end
+					
+				else
+					print("H")
+					if(countH>2)then
+					nextStep()
+					else
+					tryHPlacement()
+					end
 				end
+			end
+			
+		   -- if(rnum<0.5) then
+				-- --Place horizontal or vertical
+					-- print("D")
+					-- --print(pcounter.." 2 H 3 V")
+				-- if(randff<0.5 or countV>2)then
+					-- nextStep()
+					-- randff = math.random()
+				-- else
+					-- tryDPlacement()
+					-- randff = math.random()
+				-- end
+				
+			-- elseif(rnum<0.9) then
+					-- --print("tryVPlacement"..rnum)
+					-- --print(pcounter.." 3 H 2 V")
+					-- print("V")
+				-- if(randff<0.5)then
+					-- nextStep()
+					-- randff = math.random()
+				-- else
+					-- tryVPlacement()
+					-- randff = math.random()
+				-- end
+			-- else
+				-- print("H")
+				-- if(randff<0.5 or countH>2)then
+					-- nextStep()
+					-- randff = math.random()
+				-- else
+					-- tryHPlacement()
+					-- randff = math.random()
+				-- end
 				 
-		   end
-		  
+		   -- end
+		  if(pcounter>200)then
+			counter = 1
+			pcounter=1
+			countD = 0
+			countV = 0
+			countH = 0
+			matrix ={}
+			correctmask ={}
+			for c=1,columns do
+				matrix[c] ={}
+				correctmask[c] = {}
+				for r=1,rows do
+					matrix[c][r] = 0
+					correctmask[c][r] = 0
+				end
+			end
+		  end
 	   end
 	   local str="aaaabbbbbcddddeeeefgggghhhhiiiiijkkkkllllmmmmnnnnoooooppppqrrrrssstttttuuvvvwwwxyyyz"
 	   local checkLetter

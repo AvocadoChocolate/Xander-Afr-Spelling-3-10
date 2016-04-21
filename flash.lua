@@ -9,9 +9,15 @@ local sceneName = ...
 local composer = require( "composer" )
 local gr3
 if(grade == "3")then
-gr3 = require("g3")
-else
-gr3 = require("gr2")
+	gr3 = require("g3")
+elseif(grade =="4")then
+	gr3 = require("gr4")
+elseif(grade =="5")then
+	gr3 = require("gr5")
+elseif(grade =="6")then
+	gr3 = require("gr6")
+elseif(grade =="7")then
+ gr3 = require("gr7")
 end
 local grTotal = gr3.total()
 -- Load scene with same root filename as this file
