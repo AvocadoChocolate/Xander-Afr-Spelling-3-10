@@ -51,14 +51,14 @@ function scene:show( event )
 		bg:scale(display.contentWidth/bg.contentWidth,display.contentHeight/bg.contentHeight)
 		sceneGroup:insert(bg)
 		local function gotoHome(event)
-			word = nil
+			--word = nil
 			composer.gotoScene("menu")
 			return true
 		end
 		local menuGroup = display.newGroup()
 		local xander = display.newImage("2-reverse.png")
 		xander.x = display.contentWidth - xInset*1.5
-		xander.y = display.contentHeight - yInset*2
+		xander.y = yInset*7
 		xander:scale(xInset*2/xander.contentWidth,xInset*2/xander.contentWidth)
 		sceneGroup:insert(xander)
 		
@@ -78,11 +78,11 @@ function scene:show( event )
 		myText.anchorY =0.5
 		myText.alpha = 1
 		myText.x = display.contentWidth - xInset*2.1
-		myText.y = display.contentHeight - yInset*6.5 - 4.5
+		myText.y = yInset*2.5 - 4.5
 		myText:setFillColor( 1, 1, 1 )
 		local speechBox = display.newImage("speechbox.png")
 		speechBox.x = display.contentWidth - xInset*2.5
-		speechBox.y = display.contentHeight - yInset*6.5
+		speechBox.y =  yInset*2.5
 		speechBox:scale(-(myText.width + 18)/speechBox.contentWidth,(myText.height+18)/speechBox.contentHeight)
 		sceneGroup:insert(speechBox)
 		sceneGroup:insert(myText)

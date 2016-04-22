@@ -8,15 +8,15 @@ local sceneName = ...
 
 local composer = require( "composer" )
 local gr3
-if(grade == "3")then
+if(tonumber(grade) == 3)then
 	gr3 = require("g3")
-elseif(grade =="4")then
+elseif(tonumber(grade) == 4)then
 	gr3 = require("gr4")
-elseif(grade =="5")then
+elseif(tonumber(grade) == 5)then
 	gr3 = require("gr5")
-elseif(grade =="6")then
+elseif(tonumber(grade) == 6)then
 	gr3 = require("gr6")
-elseif(grade =="7")then
+elseif(tonumber(grade) == 7)then
  gr3 = require("gr7")
 end
 local grTotal = gr3.total()

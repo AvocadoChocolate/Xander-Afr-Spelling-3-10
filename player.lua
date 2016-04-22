@@ -158,16 +158,23 @@ function scene:show( event )
 					graduate.x = xInset*12
 					graduate.y = rowHeight *0.65
 					local function grad(event)
+						
 						plaersList[row.index].grade = tonumber(grade)+1
 						plaersList[row.index].correct = 0
 						plaersList[row.index].incorrect = 0
-						addAndSavePlayers(plaersList)
-						if(cur ==  row.index)then
+						
+						if(cur ~=  row.index)then
+						
+						cur = row.index
+						
+						end
 						player = plaersList[row.index].name
 						grade = plaersList[row.index].grade
 						correct = plaersList[row.index].correct
-						incorrect = plaersList[row.index].incorrect
-						end
+						incorrect = 0
+						list ={}
+						addAndSaveIncorrectWords(list)
+						addAndSavePlayers(plaersList)
 						composer.removeScene("player")
 						composer.gotoScene("player")
 					return true

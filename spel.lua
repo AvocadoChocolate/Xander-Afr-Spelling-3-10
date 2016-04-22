@@ -1,19 +1,17 @@
 local composer = require( "composer" )
 require("onScreenKeyboard") -- include the onScreenKeyboard.lua file
 local gr3
-if(grade == "3")then
+if(tonumber(grade) == 3)then
 	gr3 = require("g3")
-elseif(grade =="4")then
+elseif(tonumber(grade) == 4)then
 	gr3 = require("gr4")
-elseif(grade =="5")then
+elseif(tonumber(grade) == 5)then
 	gr3 = require("gr5")
-elseif(grade =="6")then
+elseif(tonumber(grade) == 6)then
 	gr3 = require("gr6")
-elseif(grade =="7")then
+elseif(tonumber(grade) == 7)then
  gr3 = require("gr7")
 end
-local gr1Total = gr3.total() + 53
-local gr2Total = gr3.total() + 50
 local grTotal = gr3.total()
 local scene = composer.newScene()
 local keyboard
@@ -494,12 +492,12 @@ local function redrawKeyboard()
 												end})
 												composer.removeScene("spel")
 												composer.gotoScene("menu",{time = 500,effect="fromTop"}) 
-												
+												list ={}
 												addAndSaveIncorrectWords(list)
 												
 												playersList[cur].grade = grade
 												playersList[cur].correct = correct
-												playersList[cur].incorrect = incorrect
+												playersList[cur].incorrect = 0
 												addAndSavePlayers(playersList)
 												if(keyboard~=nil)then
 													keyboard:destroy()

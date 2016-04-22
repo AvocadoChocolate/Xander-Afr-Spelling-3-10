@@ -8,15 +8,15 @@ local sceneName = ...
 
 local composer = require( "composer" )
 local gr3
-if(grade == "3")then
+if(tonumber(grade) == 3)then
 	gr3 = require("g3")
-elseif(grade =="4")then
+elseif(tonumber(grade) == 4)then
 	gr3 = require("gr4")
-elseif(grade =="5")then
+elseif(tonumber(grade) == 5)then
 	gr3 = require("gr5")
-elseif(grade =="6")then
+elseif(tonumber(grade) == 6)then
 	gr3 = require("gr6")
-elseif(grade =="7")then
+elseif(tonumber(grade) == 7)then
  gr3 = require("gr7")
 end
 local grTotal = gr3.total()
@@ -49,6 +49,7 @@ local wordSound
 local wordChannel
 local isPlaying = false
 local wordComplete = false
+local wordpos = 34
 local function gotoHome(event)
 	--composer.gotoScene("menu")
 	
@@ -80,15 +81,18 @@ local function getNextWord()
 	while(check)do
 		check = false
 		r = math.random(grTotal )
+		--wordpos=wordpos+1
+		--print(wordpos)
 		word = gr3.getWord(r)
 		
-		if(string.len(word)<3 or string.len(word)>15) then
+		if(string.len(word)<3 or string.len(word)>14) then
+				print("size")
 				check =true
 		end
 		for i=1,#prevWords do
 			if word == prevWords[i] then
-				print(i)
-				check =false
+				print("prev")
+				check =true
 			end
 		end
 	end
@@ -133,41 +137,48 @@ local function splitDoubleConsonants(w)
 	local doubleC = false
 	local split1 =""
 	local split2 =""
-	local l = string.len(w)-2
-	
-	
-	if(isConsonant(w:sub(1,1))==false)then
-		if(l<=2) then
-			return
-		end
-		for i = 2,l do
-			if(isConsonant(w:sub(i,i)) and isConsonant(w:sub(i+1,i+1)))then
-				split1 = w:sub(1,i)
-				split2 = w:sub(i+1,string.len(w))
-				return split1,split2
-			end
-		end
-	else	
-		if(l<=3) then
-			return
-		end
-		for i = 3,l do
-			if(isConsonant(w:sub(i,i)) and isConsonant(w:sub(i+1,i+1)))then
-				split1 = w:sub(1,i)
-				split2 = w:sub(i+1,string.len(w))
-				return split1,split2
-			end
+	--print(w)
+	local l = string.len(w) - 1
+	for i = 1,l do
+		if(isConsonant(w:sub(i,i)) and isConsonant(w:sub(i+1,i+1)))then
+			split1 = w:sub(1,i)
+			split2 = w:sub(i+1,string.len(w))
+			return split1,split2
 		end
 	end
 	
+	-- if(isConsonant(w:sub(1,1))==false)then
+		-- if(l<=2) then
+			-- return
+		-- end
+		-- for i = 2,l do
+			-- if(isConsonant(w:sub(i,i)) and isConsonant(w:sub(i+1,i+1)))then
+				-- split1 = w:sub(1,i)
+				-- split2 = w:sub(i+1,string.len(w))
+				-- return split1,split2
+			-- end
+		-- end
+	-- else	
+		-- if(l<=3) then
+			-- return
+		-- end
+		-- for i = 3,l do
+			-- if(isConsonant(w:sub(i,i)) and isConsonant(w:sub(i+1,i+1)))then
+				-- split1 = w:sub(1,i)
+				-- split2 = w:sub(i+1,string.len(w))
+				-- return split1,split2
+			-- end
+		-- end
+	-- end
+	
 end
 local function splitFirstVowel(w)
-	
+	--print(w)
 	local fVowel = false
 	local split1 =""
 	local split2 =""
 	local l = string.len(w)-1
-	for i = 2,l do
+	for i = 1,l do
 		if(isConsonant(w:sub(i,i))==false)then
 			split1 = w:sub(1,i)
 			split2 = w:sub(i+1,string.len(w))
@@ -178,6 +189,7 @@ end
 local function splitCheck(splitWord)
 	
 	if(string.len(splitWord)<4)then
+		print(splitWord)
 		pieces[#pieces+1]=splitWord
 	else
 		local s1,s2 = splitDoubleConsonants(splitWord)
@@ -252,8 +264,7 @@ end
 local function Next()
 		
 		word = getNextWord()
-		mockWord = getNextWord()
-		mock2Word = getNextWord()
+		
 		isPlaying = true
 		
 		timer.performWithDelay(500,function()
@@ -283,6 +294,7 @@ local function Next()
 		local prevX = 0
 		local c = math.random(4)
 		for i=1,#pieces do
+			
 			local pieceGroup = display.newGroup()
 			local r = math.random(5)
 			
@@ -306,14 +318,15 @@ local function Next()
 			
 			local canvasCollided = false
 			while  canvasCollided==false do
+				print("fitting")
 				canvasCollided = true
-				local xPos = math.random(3)
-				local yPos =  math.random(3)
+				local xPos = math.random(4)
+				local yPos =  math.random(4)
 				myText.x =xInset*xPos*3+xInset*3
 				myText.y = yInset*yPos*3-yInset
 				local length = myText.contentWidth + 20
 				local height = myText.contentHeight + 20
-				local rect = display.newRect(myText.x-5,myText.y +height/2,length+ 10,height+10)
+				local rect = display.newRoundedRect(myText.x-5,myText.y +height/2,length+ 10,height+10,3)
 				for l=1,#canvas do
 					
 					if(hasCollided(rect,canvas[l]))then
@@ -324,11 +337,19 @@ local function Next()
 				rect:removeSelf()
 			end
 			local function myTap(event)
-				
-				if(event.target.pos == counter)then
+				sX = event.target.x
+				print(event.target.t)
+				--print(tospell[counter].text)
+				local lookingFor = ""
+				for i=1,#tospell do
+					if(tospell[i].pos==counter)then
+						lookingFor = lookingFor..tospell[i].text
+					end
+				end
+				if(lookingFor == event.target.t)then
 					event.target.alpha = 0
 					for i=1,#tospell do
-						if(event.target.pos==tospell[i].pos)then
+						if(counter==tospell[i].pos)then
 							tospell[i].alpha = 1
 						end
 					end
@@ -359,6 +380,11 @@ local function Next()
 					else
 						counter = counter + 1
 					end
+				else
+					
+					transition.to(event.target,{time =120 ,rotation= 1,x =  sX + 0.1,iterations = 3,onRepeat =function() 
+						transition.to(event.target,{time =120 ,rotation = -1,x= sX - 0.10})
+					end,onComplete =function() transition.to(event.target,{time =6,rotation = 0 ,x=sX}) end})
 				end
 				
 				return true
@@ -374,14 +400,14 @@ local function Next()
 			end
 			local length = myText.contentWidth
 			local height = myText.contentHeight
-			local rect = display.newRect(myText.x-5,myText.y +height/2,length+ 10,height+10)
+			local rect = display.newRoundedRect(myText.x-5,myText.y +height/2,length+ 10,height+10,3,3)
 			rect.anchorX =0
 			rect.anchorY = 0.5
 			rect:setFillColor(color[1],color[2],color[3])
 			pieceGroup:insert(rect)
 			pieceGroup:insert(myText)
 			pieceGroup.pos = i
-		
+			pieceGroup.t = pieces[i]
 			canvas[#canvas+1] = rect 
 			wordsGroup:insert(pieceGroup)
 			
@@ -403,7 +429,7 @@ function scene:create( event )
 		
 		local xander = display.newImage("1.png")
 		xander.x = display.contentWidth - xInset*2
-		xander.y = display.contentHeight/2 
+		xander.y = display.contentHeight/2 - yInset*2
 		xander:scale(xInset*2.5/xander.contentWidth,xInset*2.5/xander.contentWidth)
 		xanderGroup:insert(xander)
 		
@@ -423,11 +449,11 @@ function scene:create( event )
 		myText.anchorY =0.5
 		myText.alpha = 1
 		myText.x = display.contentWidth - xInset*2.5
-		myText.y = display.contentHeight/2 -yInset*5 - 4.5
+		myText.y = display.contentHeight/2 -yInset*7- 4.5
 		myText:setFillColor( 1, 1, 1 )
 		local speechBox = display.newImage("speechbox.png")
 		speechBox.x = display.contentWidth - xInset*2.5
-		speechBox.y = display.contentHeight/2 -yInset*5
+		speechBox.y = display.contentHeight/2 -yInset*7
 		speechBox:scale(-(myText.contentWidth+10)/speechBox.contentWidth,yInset*2/speechBox.contentHeight)
 		xanderGroup:insert(speechBox)
 		xanderGroup:insert(myText)

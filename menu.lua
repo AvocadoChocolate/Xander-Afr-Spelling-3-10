@@ -13,6 +13,8 @@ local scene = composer.newScene( sceneName )
 
 ---------------------------------------------------------------------------------
 local xInset,yInset = display.contentWidth / 20 , display.contentHeight / 20
+print(xInset)
+print(yInset)
 require("onScreenKeyboard")
 local k
 local wordTyped =""

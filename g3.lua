@@ -62,7 +62,7 @@ local words ={
 "stokperdjie",
 "straatblokke",
 "strandstoel",
-"Suid-Afrika",
+--"Suid-Afrika",
 "superkampioen",
 "suurstoftenk",
 "uitverkoping",

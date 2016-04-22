@@ -8,15 +8,15 @@ local sceneName = ...
 
 local composer = require( "composer" )
 local gr3
-if(grade == "3")then
+if(tonumber(grade) == 3)then
 	gr3 = require("g3")
-elseif(grade =="4")then
+elseif(tonumber(grade) == 4)then
 	gr3 = require("gr4")
-elseif(grade =="5")then
+elseif(tonumber(grade) == 5)then
 	gr3 = require("gr5")
-elseif(grade =="6")then
+elseif(tonumber(grade) == 6)then
 	gr3 = require("gr6")
-elseif(grade =="7")then
+elseif(tonumber(grade) == 7)then
  gr3 = require("gr7")
 end
 local grTotal = gr3.total()
@@ -661,13 +661,13 @@ function scene:create( event )
 				end
 				matrix[c][r] = randomL
 			end
-			local smallRect = display.newRect(0,0,28,28)
+			local smallRect = display.newRect(0,0,25,25)
 			smallRect.alpha=0
 			--smallRect:setFillColor(0)
 			smallRect.anchorX =0
 			smallRect.anchorY =0
-			smallRect.x = c*28
-			smallRect.y = r*28
+			smallRect.x = c*25
+			smallRect.y = r*25
 			smallRect.c =c
 			smallRect.r =r
 			smallRect.isHitTestable = true
@@ -688,8 +688,8 @@ function scene:create( event )
 			local myText = display.newText( options )
 			myText.anchorX =0
 			myText.anchorY =0
-			myText.x = c*28
-			myText.y = r*28
+			myText.x = c*25
+			myText.y = r*25
 			myText:setFillColor( 0, 0, 0 )
 			wordgrid:insert(myText)
 			
@@ -713,8 +713,22 @@ function scene:create( event )
 			local myText = display.newText( options )
 			myText.anchorX =0
 			myText.anchorY =0
-			myText.x = display.contentWidth - xInset*4
-			myText.y = yInset*w*2 + yInset*2
+			if(system.getInfo( "model" )=="iPad" or system.getInfo( "model" )=="iPad Simulator")then
+				if(w<3)then
+					myText.x = xInset * 2
+					myText.y = display.contentHeight - yInset*5 + yInset*w*1.5
+				elseif(w<5)then
+					myText.x = xInset * 8
+					myText.y = display.contentHeight - yInset*8 + yInset*w*1.5
+				else
+					myText.x = xInset * 14
+					myText.y = display.contentHeight - yInset*10 + yInset*w*1.5
+				end
+			else
+				myText.x = display.contentWidth - xInset*5
+				myText.y = yInset*w*2 + yInset*2
+			end
+				
 			myText:setFillColor( 0, 0, 0 )
 			searchList[#searchList+1] = myText
 			wordsSearchGroup:insert(myText)
