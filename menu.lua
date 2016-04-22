@@ -158,7 +158,7 @@ function scene:create( event )
 			--y = 200,
 			--width = xInset*3,     --required for multi-line and alignment
 			font = "TeachersPet",   
-			fontSize = 28,
+			fontSize = 22,
 			align = "right"  --new alignment parameter
 		}
 		
@@ -175,7 +175,7 @@ function scene:create( event )
 			--y = 200,
 			--width = xInset*3,     --required for multi-line and alignment
 			font = "TeachersPet",   
-			fontSize = 28,
+			fontSize = 22,
 			align = "right"  --new alignment parameter
 		}
 
@@ -192,7 +192,7 @@ function scene:create( event )
 			--y = 200,
 			--width = xInset*3,     --required for multi-line and alignment
 			font = "TeachersPet",   
-			fontSize = 28,
+			fontSize = 22,
 			align = "right"  --new alignment parameter
 		}
 
@@ -209,7 +209,7 @@ function scene:create( event )
 			--y = 200,
 			--width = xInset*3,     --required for multi-line and alignment
 			font = "TeachersPet",   
-			fontSize = 28,
+			fontSize = 22,
 			align = "right"  --new alignment parameter
 		}
 
