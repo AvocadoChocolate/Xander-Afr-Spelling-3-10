@@ -14,7 +14,7 @@ elseif(tonumber(grade) == 7)then
 end
 local grTotal = gr3.total()
 local scene = composer.newScene()
-local keyboard
+local keyboard = nil
 local myText
 local textField
 local tospell = {}
@@ -52,6 +52,7 @@ local function gotoHome(event)
 		end})
 		composer.gotoScene("menu",{time = 500,effect="fromTop"}) 
 		addAndSaveIncorrectWords(list)
+		
 		playersList[cur].grade = grade
 		playersList[cur].correct = correct
 		playersList[cur].incorrect = incorrect

@@ -59,10 +59,10 @@ local words ={
 "goeiemore",
 "gordyne",
 "halfeeu",
-"hoëhakskoen",
+--"hoëhakskoen",
 "kleurpotlode",
 "pampoenkoekie",
-"reëndruppels"
+--"reëndruppels"
 }
 function gr4.getWord(i)
 	return words[i]

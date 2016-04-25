@@ -322,6 +322,7 @@ function scene:create( event )
 							val.grade ="3"
 							val.correct ="0"
 							val.incorrect = "0"
+							cur = 1
 							plaersList = {}
 							plaersList[#plaersList+1]=val
 							player = val.name
