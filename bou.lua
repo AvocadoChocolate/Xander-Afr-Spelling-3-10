@@ -46,6 +46,7 @@ local linesGroup = display.newGroup()
 local bouGroup = display.newGroup()
 local tick
 local wordSound
+local syllableSound
 local wordChannel
 local isPlaying = false
 local wordComplete = false
@@ -54,11 +55,11 @@ local function gotoHome(event)
 	--composer.gotoScene("menu")
 	
 	print(isPlaying)
-	if(isPlaying)then
+	--if(isPlaying)then
 		audio.stop()
 		
 		isPlaying = false
-	end
+	--end
 	if( wordComplete==false)then
 	transition.to(menuGroup,{time = 100, alpha = 0,onComplete =function() 
 			transition.to(menuGroup,{time = 100, alpha = 1})
@@ -213,7 +214,7 @@ local function drawLines()
 	linesGroup.anchorX = 0.5
 	linesGroup.anchorY = 0
 	linesGroup.x = display.contentWidth / 2
-	linesGroup.y = display.contentHeight - yInset *6.5
+	linesGroup.y = display.contentHeight - yInset *5.5
 	
 	local i =1
 	for k=1,#pieces do
@@ -262,14 +263,19 @@ local function drawLines()
 end
 
 local function Next()
-		
+
+		audio.stop()
 		word = getNextWord()
 		
 		isPlaying = true
 		
 		timer.performWithDelay(500,function()
 		wordSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3" )
-		wordChannel = audio.play( wordSound ,{onComplete= function() isPlaying = false end})
+		syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."S.mp3" )
+		wordChannel = audio.play( wordSound ,{onComplete= function() 
+		audio.play( syllableSound ,{onComplete= function()
+		isPlaying = false end})
+		end})
 		wordComplete = false
 		end)
 		--print(word)
@@ -306,7 +312,7 @@ local function Next()
 				--y = 200,
 				--width = 128,     --required for multi-line and alignment
 				font = "TeachersPet",   
-				fontSize = 36,
+				fontSize = 48,
 				align = "right"  --new alignment parameter
 			}
 
@@ -322,8 +328,8 @@ local function Next()
 				canvasCollided = true
 				local xPos = math.random(4)
 				local yPos =  math.random(4)
-				myText.x =xInset*xPos*3+xInset*3
-				myText.y = yInset*yPos*3-yInset
+				myText.x =xInset*xPos*3 + xInset
+				myText.y = yInset*yPos*3-yInset*1.5
 				local length = myText.contentWidth + 20
 				local height = myText.contentHeight + 20
 				local rect = display.newRoundedRect(myText.x-5,myText.y +height/2,length+ 10,height+10,3)
@@ -464,13 +470,13 @@ function scene:create( event )
 		mCircle:scale(xInset*1.5/mCircle.width,xInset*1.5/mCircle.width)
 		--mCircle:setFillColor( 255/255, 51/255, 204/255 )
 		menuGroup:insert(mCircle)
-		menuGroup.x =  xInset*2
+		menuGroup.x =  xInset*1.5
 		menuGroup.y =  yInset*2
 		menuGroup:addEventListener( "tap", gotoHome )
 		bouGroup:insert(menuGroup)
 		local soundButton = display.newImage("Sound.png")
 		soundButton:scale(xInset*1.5/soundButton.width,xInset*1.5/soundButton.width)
-		soundButton.x = xInset*2
+		soundButton.x = xInset*1.5
 		soundButton.y = display.contentHeight - yInset*2
 		local function playWord(event)
 			transition.to(soundButton,{time = 100, alpha = 0,onComplete =function() 
@@ -478,9 +484,14 @@ function scene:create( event )
 			end})
 			if(isPlaying==false)then
 				wordSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3" )
+				syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3" )
 				isPlaying = true
-				wordChannel = audio.play( wordSound ,{onComplete=function()isPlaying=false end})
+				wordChannel = audio.play( wordSound ,{onComplete=function()
+				audio.play( syllableSound ,{onComplete=function()
+				isPlaying=false end})
+				end})
 			end
+			return true
 		end
 		
 		soundButton:addEventListener("tap",playWord)
@@ -514,8 +525,12 @@ function scene:show( event )
 		if(isPlaying==false)then
 			timer.performWithDelay(500,function()
 			wordSound = audio.loadSound("sound/graad"..grade.."/"..word..".mp3" )
+			syllableSound = audio.loadSound("sound/graad"..grade.."/"..word..".mp3" )
 			isPlaying = true
-			wordChannel = audio.play( wordSound ,{onComplete=function()isPlaying=false end})
+			wordChannel = audio.play( wordSound ,{onComplete=function()
+			audio.play( syllableSound ,{onComplete=function()
+			isPlaying=false end})
+			end})
 			end)
 		end
     end 

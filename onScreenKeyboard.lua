@@ -159,7 +159,7 @@ function onScreenKeyboard:new(params)
                    listener            = nil                                                            ,
                    displayGroup        = nil                                                            ,
                    parent              = nil                                                            ,
-                   btnBgColor          = {255/255, 51/255, 204/255}                                                  ,
+                   btnBgColor          = {176/255,176/255,176/255}                                                  ,
                    btnBgAlpha          = 1                                                         ,
                    btnFgColor          = {1, 1, 1}                                                  ,
                    btnFontName         = "TeachersPet"                                                        ,

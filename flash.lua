@@ -27,6 +27,7 @@ local scene = composer.newScene( sceneName )
 local xInset,yInset = display.contentWidth / 20 , display.contentHeight / 20
 local word =""
 local cardText
+local swipeImg
 local prevWords = {}
 local cardGroup = display.newGroup()
 local isSwipping = false
@@ -34,6 +35,7 @@ local cur = 1
 local card
 local bg 
 local wordSound
+local syllableSound
 local wordChannel
 local isPlaying =false
 local flashGroup = display.newGroup()
@@ -231,15 +233,37 @@ local function handleSwipe( event )
 			if ( dX > 10 ) then
 				if( cur > 1)then
 					isSwipping = true
+					if(swipeImg~=nil)then
+					
+					
+					swipeImg:removeSelf()
+					swipeImg = nil
+					end
 					cur = cur -1 
 					transition.to(cardGroup,{time = 500,x = 1.5 * display.contentWidth,onComplete = function()
 					word = prevWords[cur]
 					timer.performWithDelay(500,function()
 					wordSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3" )
-		
+					syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."S.mp3" )
 					isPlaying = true
-					wordChannel = audio.play( wordSound ,{onComplete=function()isPlaying=false 
+					wordChannel = audio.play( wordSound ,{onComplete=function()
+					audio.play(syllableSound,{onComplete=function()
+					isPlaying=false 
 					transition.to(cardText,{time=500,alpha = 1})
+					if(swipeImg==nil)then
+						swipeImg = display.newImage("drag.png")
+						swipeImg:scale(xInset/swipeImg.contentWidth,xInset/swipeImg.contentWidth)
+						swipeImg.x = display.contentWidth / 2 + xInset * 2.5
+						swipeImg.y = display.contentHeight - yInset*2
+						swipeImg.alpha = 0.4
+						flashGroup:insert(swipeImg)
+						transition.to(swipeImg,{time=1000,x = display.contentWidth / 2 - xInset * 2.5,alpha=1,onComplete = function()
+						transition.to(swipeImg,{time=1000,delay=100,x = display.contentWidth / 2 + xInset * 2.5,alpha=0.4,onComplete=function()
+						swipeImg.alpha=0
+						end})
+						end})
+					end
+					end})
 					end})
 					end)
 					print(word)
@@ -256,6 +280,11 @@ local function handleSwipe( event )
 			elseif ( dX < -10 ) then
 				cur = cur + 1 
 				isSwipping = true
+				if(swipeImg~=nil)then
+				
+				swipeImg:removeSelf()
+				swipeImg = nil
+				end
 				transition.to(cardGroup,{time = 500,x = -  display.contentWidth,onComplete = function()
 				if(#prevWords >= cur)then
 					word = prevWords[cur]
@@ -263,10 +292,26 @@ local function handleSwipe( event )
 					word = getNextWord()
 					timer.performWithDelay(500,function()
 					wordSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3" )
-		
+					syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."S.mp3" )
 					isPlaying = true
-					wordChannel = audio.play( wordSound ,{onComplete=function()isPlaying=false 
+					wordChannel = audio.play( wordSound ,{onComplete=function()
+					audio.play(syllableSound,{onComplete=function()
+					isPlaying=false 
 					transition.to(cardText,{time=500,alpha = 1})
+					if(swipeImg==nil)then
+						swipeImg = display.newImage("drag.png")
+						swipeImg:scale(xInset/swipeImg.contentWidth,xInset/swipeImg.contentWidth)
+						swipeImg.x = display.contentWidth / 2 + xInset * 2.5
+						swipeImg.y = display.contentHeight - yInset*2
+						swipeImg.alpha = 0.4
+						flashGroup:insert(swipeImg)
+						transition.to(swipeImg,{time=1000,x = display.contentWidth / 2 - xInset * 2.5,alpha=1,onComplete = function()
+						transition.to(swipeImg,{time=1000,delay=100,x = display.contentWidth / 2 + xInset * 2.5,alpha=0.4,onComplete=function()
+						swipeImg.alpha=0
+						end})
+						end})
+					end
+					end})
 					end})
 					end)
 					prevWords[#prevWords+1] = word
@@ -357,60 +402,85 @@ function scene:create( event )
 			end})
 			if(isPlaying==false)then
 				wordSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3" )
+				syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."S.mp3" )
+				
 				isPlaying = true
-				wordChannel = audio.play( wordSound ,{onComplete=function()isPlaying=false end})
+				wordChannel = audio.play( wordSound ,{onComplete=function()
+				audio.play(syllableSound,{onComplete=function()
+				isPlaying=false 
+				end})
+				end})
 			end
 		end
 		
 		soundButton:addEventListener("tap",playWord)
 		flashGroup:insert(soundButton)
-		local options = 
-		{
-			--parent = textGroup,
-			text = "< >",     
-			--x = 0,
-			--y = 200,
-			--width = 128,     --required for multi-line and alignment
-			--font = "TeachersPet",   
-			fontSize = 28,
-			align = "right"  --new alignment parameter
-		}
+		-- local options = 
+		-- {
+			-- --parent = textGroup,
+			-- text = "< >",     
+			-- --x = 0,
+			-- --y = 200,
+			-- --width = 128,     --required for multi-line and alignment
+			-- --font = "TeachersPet",   
+			-- fontSize = 28,
+			-- align = "right"  --new alignment parameter
+		-- }
 
-	    local myText = display.newText( options )
-		myText.anchorY =0.5
-		myText.alpha = 1
-		myText.x = display.contentWidth / 2
-		myText.y = display.contentHeight - yInset*2.5
-		myText:setFillColor( 0.8)
-		flashGroup:insert(myText)
-		local options = 
-		{
-			--parent = textGroup,
-			text = "SWIPE VIR VOLGENDE",     
-			--x = 0,
-			--y = 200,
-			--width = 128,     --required for multi-line and alignment
-			font = "TeachersPet",   
-			fontSize = 22,
-			align = "right"  --new alignment parameter
-		}
+	    -- local myText = display.newText( options )
+		-- myText.anchorY =0.5
+		-- myText.alpha = 1
+		-- myText.x = display.contentWidth / 2
+		-- myText.y = display.contentHeight - yInset*2.5
+		-- myText:setFillColor( 0.8)
+		-- flashGroup:insert(myText)
+		-- local options = 
+		-- {
+			-- --parent = textGroup,
+			-- text = "SWIPE VIR VOLGENDE",     
+			-- --x = 0,
+			-- --y = 200,
+			-- --width = 128,     --required for multi-line and alignment
+			-- font = "TeachersPet",   
+			-- fontSize = 22,
+			-- align = "right"  --new alignment parameter
+		-- }
 
-	    local myText = display.newText( options )
-		myText.anchorY =0.5
-		myText.alpha = 1
-		myText.x = display.contentWidth / 2
-		myText.y = display.contentHeight - yInset
-		myText:setFillColor( 0.6)
-		flashGroup:insert(myText)
+	    -- local myText = display.newText( options )
+		-- myText.anchorY =0.5
+		-- myText.alpha = 1
+		-- myText.x = display.contentWidth / 2
+		-- myText.y = display.contentHeight - yInset
+		-- myText:setFillColor( 0.6)
+		-- flashGroup:insert(myText)
+		
+		
 	    word = getNextWord()
 		isPlaying = true
 		timer.performWithDelay(500,function()
 		wordSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3" )
-		wordChannel = audio.play( wordSound ,{onComplete=function()isPlaying=false 
+		syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."S.mp3" )
+		wordChannel = audio.play( wordSound ,{onComplete=function()
+		audio.play(syllableSound,{onComplete=function()
+		isPlaying=false 
 		if cardText.alpha == 0  then
 			transition.to(cardText,{time=500,alpha = 1})
 		end
 		transition.to(cardText,{time=500,alpha = 1})
+		if(swipeImg==nil)then
+						swipeImg = display.newImage("drag.png")
+						swipeImg:scale(xInset/swipeImg.contentWidth,xInset/swipeImg.contentWidth)
+						swipeImg.x = display.contentWidth / 2 + xInset * 2.5
+						swipeImg.y = display.contentHeight - yInset*2
+						swipeImg.alpha = 0.4
+						flashGroup:insert(swipeImg)
+						transition.to(swipeImg,{time=1000,x = display.contentWidth / 2 - xInset * 2.5,alpha=1,onComplete = function()
+						transition.to(swipeImg,{time=1000,delay=100,x = display.contentWidth / 2 + xInset * 2.5,alpha=0.4,onComplete=function()
+						swipeImg.alpha=0
+						end})
+						end})
+					end
+		end})
 		end})
 		end)
 		prevWords[#prevWords+1] = word
@@ -441,12 +511,16 @@ function scene:show( event )
 		if(isPlaying==false)then
 			timer.performWithDelay(500,function()
 			wordSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3" )
+			syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."S.mp3" )
 			isPlaying = true
 			
-			wordChannel = audio.play( wordSound ,{onComplete=function()isPlaying=false 
+			wordChannel = audio.play( wordSound ,{onComplete=function()
+			audio.play(syllableSound,{onComplete=function()
+			isPlaying=false 
 			if cardText.alpha == 0 then
 				transition.to(cardText,{time=500,alpha = 1})
 			end
+			end})
 			end})
 			end)
 		end

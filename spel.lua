@@ -16,6 +16,7 @@ local grTotal = gr3.total()
 local scene = composer.newScene()
 local keyboard = nil
 local myText
+local ishint = false
 local textField
 local tospell = {}
 local counter = 1
@@ -34,16 +35,17 @@ local correction = false
 local correctionTable = {}
 local congrats = {"Fantasties!","Uitstekend!","Puik!"}
 local wordSound
+local syllableSound
 local wordChannel
 local isPlaying = false
 local xanderGroup = display.newGroup()
 -----
 local function gotoHome(event)
-	if(isPlaying)then
+	--if(isPlaying)then
 		audio.stop()
 		
 		isPlaying = false
-	end
+	--end
 	transition.to(menuGroup,{time = 100, alpha = 0,onComplete =function() 
 			transition.to(menuGroup,{time = 100, alpha = 1})
 			end})
@@ -73,10 +75,15 @@ local function getNextWord()
 		check = false
 		r = math.random(grTotal)
 		word = gr3.getWord(r)
+		audio.stop()
 		isPlaying = true
 		timer.performWithDelay(500,function()
 		wordSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3" )
-		wordChannel = audio.play( wordSound ,{onComplete=function() isPlaying = false end })
+		syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."S.mp3" )
+		wordChannel = audio.play( wordSound ,{onComplete=function()
+		audio.play(syllableSound,{onComplete=function()
+		isPlaying = false end})
+		end})
 		end)
 		
 		for i=1,#prevWords do
@@ -177,7 +184,10 @@ local function redrawKeyboard()
 				enable[#enable+1] = word:sub(i,i)
 			end
 		end
-        --keyboard:displayOnly(enable)
+		if(ishint)then
+			keyboard:displayOnly(enable)
+			ishint = false
+		end
         --create a listener function that receives the events of the keyboard
         local listener = function(event)
             if(event.phase == "ended")  then
@@ -275,8 +285,12 @@ local function redrawKeyboard()
 						elseif(event.key == "sound")then
 							if(isPlaying==false)then
 								wordSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3"  )
+								syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."S.mp3"  )
 								isPlaying = true
-								wordChannel = audio.play( wordSound ,{onComplete=function()isPlaying=false end})
+								wordChannel = audio.play( wordSound ,{onComplete=function()
+								audio.play(syllableSound,{onComplete=function()
+								isPlaying=false end})
+								end})
 							end
 						else
 						tospell[counter].text=keyboard:getText() --update the textfield with the current text of the keyboard
@@ -845,14 +859,31 @@ function scene:create( event )
 		menuGroup = display.newGroup()
 		
 		local mCircle = display.newImage("home.png")
-		mCircle:scale(xInset*2/mCircle.width,xInset*2/mCircle.width)
+		mCircle:scale(xInset*1.5/mCircle.width,xInset*1.5/mCircle.width)
 		--mCircle:setFillColor( 255/255, 51/255, 204/255 )
 		menuGroup:insert(mCircle)
-		menuGroup.x =  xInset*2
+		menuGroup.x =  xInset*1.5
 		menuGroup.y =  yInset*2
 		menuGroup:addEventListener( "tap", gotoHome )
 		--sceneGroup:insert(menuGroup)
 		spelGroup:insert(menuGroup)
+		local hint = display.newImage("helpicon2.png")
+		hint:scale(xInset*1.5/hint.width,xInset*1.5/hint.width)
+		hint.x = display.contentWidth - xInset*1.5
+		hint.y = yInset*2
+		local function enableCorrect(event)
+			transition.to(hint,{time = 100, alpha = 0,onComplete =function() 
+			transition.to(hint,{time = 100, alpha = 1})
+			end})
+			if(keyboard~=nil)then
+				ishint = true
+				redrawKeyboard()
+			end
+			return true
+		end
+		
+		hint:addEventListener("tap",enableCorrect)
+		spelGroup:insert(hint)
 		list = getIncorrectWords()
 		--developerMode()
 		--sceneGroup:insert(myText)
@@ -888,8 +919,12 @@ function scene:show( event )
 		if(isPlaying==false)then
 			timer.performWithDelay(500,function()
 			wordSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3"  )
+			syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3"  )
 			isPlaying = true
-			wordChannel = audio.play( wordSound ,{onComplete=function()isPlaying=false end})
+			wordChannel = audio.play( wordSound ,{onComplete=function()
+			audio.play(syllableSound,{onComplete=function()
+			isPlaying=false end})
+			end})
 			end)
 		end
 	end
