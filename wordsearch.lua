@@ -661,9 +661,11 @@ function scene:create( event )
 				end
 				matrix[c][r] = randomL
 			end
+			print(correctmask[c][r])
+			
 			local smallRect = display.newRect(0,0,25,25)
 			smallRect.alpha=0
-			--smallRect:setFillColor(0)
+			--smallRect:setFillColor(0.5)
 			smallRect.anchorX =0
 			smallRect.anchorY =0
 			smallRect.x = c*25
@@ -673,6 +675,7 @@ function scene:create( event )
 			smallRect.isHitTestable = true
 			smallRect:addEventListener( "touch", myTouchListener )
 			wordgrid:insert(smallRect)
+			
 			local options = 
 			{
 				--parent = textGroup,

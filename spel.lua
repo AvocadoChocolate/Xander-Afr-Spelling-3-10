@@ -127,7 +127,7 @@ local function drawLines()
 	linesGroup.anchorX = 0.5
 	linesGroup.anchorY = 0
 	linesGroup.x = display.contentWidth / 2
-	linesGroup.y = yInset * 4
+	linesGroup.y = yInset * 6
 	local wordSize = string.len(word)
 	
 	
@@ -207,9 +207,9 @@ local function redrawKeyboard()
 								local x = math.random(4)
 								local y = math.random(3)
 								local xander = display.newImage(x..".png")
-								xander.x = display.contentWidth - xInset*2
-								xander.y = yInset*5
-								xander:scale(xInset*2.5/xander.contentWidth,xInset*2.5/xander.contentWidth)
+								xander.x = display.contentWidth /2 + xInset*2
+								xander.y = yInset * 3.5
+								xander:scale(xInset*2/xander.contentWidth,xInset*2/xander.contentWidth)
 								xanderGroup:insert(xander)
 								
 								local options = 
@@ -227,12 +227,12 @@ local function redrawKeyboard()
 								local myText = display.newText( options )
 								myText.anchorY =0.5
 								myText.alpha = 1
-								myText.x = display.contentWidth - xInset*5
-								myText.y = yInset*3 - 4.5
+								myText.x = display.contentWidth/2 - xInset/2
+								myText.y = yInset*2 - 4.5
 								myText:setFillColor( 1, 1, 1 )
 								local speechBox = display.newImage("speechbox.png")
-								speechBox.x = display.contentWidth - xInset*5
-								speechBox.y = yInset*3
+								speechBox.x = display.contentWidth/2 - xInset/2
+								speechBox.y = yInset*2
 								speechBox:scale(-(myText.contentWidth+10)/speechBox.contentWidth,yInset*2/speechBox.contentHeight)
 								xanderGroup:insert(speechBox)
 								xanderGroup:insert(myText)
@@ -303,9 +303,9 @@ local function redrawKeyboard()
 								local x = math.random(4)
 								local y = math.random(3)
 								local xander = display.newImage(x..".png")
-								xander.x = display.contentWidth - xInset*2
-								xander.y = yInset*5
-								xander:scale(xInset*2.5/xander.contentWidth,xInset*2.5/xander.contentWidth)
+								xander.x = display.contentWidth/2 + xInset*2
+								xander.y = yInset * 3.5 
+								xander:scale(xInset*2/xander.contentWidth,xInset*2/xander.contentWidth)
 								xanderGroup:insert(xander)
 								
 								local options = 
@@ -323,12 +323,12 @@ local function redrawKeyboard()
 								local myText = display.newText( options )
 								myText.anchorY =0.5
 								myText.alpha = 1
-								myText.x = display.contentWidth - xInset*5
-								myText.y = yInset*3 - 4.5
+								myText.x = display.contentWidth/2 - xInset/2
+								myText.y = yInset*2 - 4.5
 								myText:setFillColor( 1, 1, 1 )
 								local speechBox = display.newImage("speechbox.png")
-								speechBox.x = display.contentWidth - xInset*5
-								speechBox.y = yInset*3
+								speechBox.x = display.contentWidth/2 - xInset/2
+								speechBox.y = yInset*2
 								speechBox:scale(-(myText.contentWidth+10)/speechBox.contentWidth,yInset*2/speechBox.contentHeight)
 								xanderGroup:insert(speechBox)
 								xanderGroup:insert(myText)
