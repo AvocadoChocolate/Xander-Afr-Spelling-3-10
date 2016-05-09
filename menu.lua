@@ -468,7 +468,7 @@ function scene:show( event )
 
     if phase == "will" then
         -- Called when the scene is still off screen and is about to move on screen
-        audio.stop()
+       
     elseif phase == "did" then
         -- Called when the scene is now on screen
         -- 
@@ -476,6 +476,7 @@ function scene:show( event )
         -- e.g. start timers, begin animation, play audio, etc
         
         -- we obtain the object by id from the scene's object hierarchy
+		audio.stop()
 		local gr3
 			local grTotal
 			if(grade == "3")then

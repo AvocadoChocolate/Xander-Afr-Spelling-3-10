@@ -43,11 +43,12 @@ local xanderGroup = display.newGroup()
 -----
 local function gotoHome(event)
 	goingHome = true
-	
-	audio.stop()
-	
+	print("isPlaying gotoHome: ")
+	print(isPlaying)
+	if(isPlaying)then
 	isPlaying = false
-		
+	audio.stop()
+	end	
 	transition.to(menuGroup,{time = 100, alpha = 0,onComplete =function() 
 			transition.to(menuGroup,{time = 100, alpha = 1})
 			end})
@@ -78,22 +79,6 @@ local function getNextWord()
 		check = false
 		r = math.random(grTotal)
 		word = gr3.getWord(r)
-		audio.stop()
-		
-		
-		isPlaying = true
-			timer.performWithDelay(500,function()
-			print(goingHome)
-			if(goingHome==false)then
-			
-			wordSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3" )
-			syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."S.mp3" )
-			wordChannel = audio.play( wordSound ,{onComplete=function()
-			audio.play(syllableSound,{onComplete=function()
-			isPlaying = false end})
-			end})
-			end
-			end)
 		
 		
 		for i=1,#prevWords do
@@ -103,6 +88,32 @@ local function getNextWord()
 
 		end
 	end
+	if(isPlaying)then
+		audio.stop()
+		isPlaying = false
+	end
+	isPlaying = true
+	print("isPlaying getNextWord: ")
+	print(isPlaying)
+	
+	timer.performWithDelay(500,function()
+	
+	if(goingHome==false)then
+	
+	wordSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3" )
+	syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."S.mp3" )
+	wordChannel = audio.play( wordSound ,{onComplete=function()
+	if(isPlaying)then
+	audio.play(syllableSound,{onComplete=function()
+	isPlaying = false 
+	end})
+	end
+	end})
+	else
+		isPlaying = false
+	end
+	end)
+	
 	word = string.gsub( word, "%-","")
 	word = string.lower( word )
 	return word
@@ -177,7 +188,7 @@ local function redrawKeyboard()
 			keyboard = nil
 		end
 		
-		print("drawKeyBoard")
+		
 		keyboard = onScreenKeyboard:new()
 		keyboard:drawKeyBoard(keyboard.keyBoardMode.letters_small)
 		
@@ -204,8 +215,7 @@ local function redrawKeyboard()
 					if(correction)then
 						if(Correctioncounter<=#correctionTable)then
 							local text = keyboard:getText()
-							print(correctionTable[Correctioncounter].text)
-							print(correctionTable[Correctioncounter].pos)
+							
 							if(correctionTable[Correctioncounter].text == text)then
 								tospell[correctionTable[Correctioncounter].pos].text = text
 								Correctioncounter=Correctioncounter+1
@@ -213,7 +223,7 @@ local function redrawKeyboard()
 							end
 							if(Correctioncounter>#correctionTable) then
 								--Get next word
-								print("correct")
+								
 								local x = math.random(4)
 								local y = math.random(3)
 								local xander = display.newImage(x..".png")
@@ -298,8 +308,10 @@ local function redrawKeyboard()
 								syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."S.mp3"  )
 								isPlaying = true
 								wordChannel = audio.play( wordSound ,{onComplete=function()
-								audio.play(syllableSound,{onComplete=function()
-								isPlaying=false end})
+								if(isPlaying==true)then
+									audio.play(syllableSound,{onComplete=function()
+									isPlaying=false end}) 
+								end
 								end})
 							end
 						else
@@ -309,7 +321,7 @@ local function redrawKeyboard()
 						if(counter==string.len(word))then
 							if(wordTyped ==  word) then
 								--Get next word
-								print("correct")
+								
 								local x = math.random(4)
 								local y = math.random(3)
 								local xander = display.newImage(x..".png")
@@ -355,7 +367,7 @@ local function redrawKeyboard()
 								
 								
 								if(tonumber(grade) < 7)then
-									print(grTotal)
+									
 									if(tonumber(correct)<=100)then
 									correct = correct + 1
 									end
@@ -830,7 +842,7 @@ local function redrawKeyboard()
                 --check whether the user finished writing with the keyboard. The inputCompleted
                 --flag of  the keyboard is set to true when the user touched its "OK" button
                 if(event.target.inputCompleted == true) then
-                    print("Input of data complete...") 
+                   
                 end
             end
         end
@@ -905,7 +917,7 @@ function scene:create( event )
 		--keyboard = true
 		
 		spelGroup:insert(linesGroup)
-		print("scene created")
+		
 		sceneGroup:insert(spelGroup)
 	
 		
@@ -923,7 +935,7 @@ function scene:show( event )
 		-- INSERT code here to make the scene come alive
 		-- e.g. start timers, begin animation, play audio, etc.
 		--math.randomseed( os.time() )
-		print(cur)
+		
 		goingHome = false
 		drawLines()
 		redrawKeyboard()
