@@ -38,6 +38,7 @@ local colors ={{51/255, 204/255, 51/255},
 local prevWords = {}
 local canvas ={}
 local pieces = {}
+local goingHome = false
 local mpieces = {}
 local tospell = {}
 local counter = 1
@@ -60,7 +61,7 @@ local function gotoHome(event)
 		
 		isPlaying = false
 	--end
-	if( wordComplete==false)then
+	goingHome = true
 	transition.to(menuGroup,{time = 100, alpha = 0,onComplete =function() 
 			transition.to(menuGroup,{time = 100, alpha = 1})
 			end})
@@ -71,7 +72,7 @@ local function gotoHome(event)
 	
 	end})
 	composer.gotoScene("menu",{time = 500,effect="fromBottom"}) 
-	end
+	
 	return true
 end
 
@@ -265,18 +266,21 @@ end
 local function Next()
 
 		audio.stop()
+		isPlaying = false
 		word = getNextWord()
 		
-		isPlaying = true
+		
 		
 		timer.performWithDelay(500,function()
+		if(goingHome == false)then
+		isPlaying = true
 		wordSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3" )
 		syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."S.mp3" )
 		wordChannel = audio.play( wordSound ,{onComplete= function() 
 		audio.play( syllableSound ,{onComplete= function()
 		isPlaying = false end})
 		end})
-		wordComplete = false
+		end
 		end)
 		--print(word)
 		local s1,s2 = splitDoubleConsonants(word)
@@ -518,6 +522,8 @@ function scene:show( event )
         
         -- we obtain the object by id from the scene's object hierarchy
 		--math.randomseed( os.time() )
+		goingHome = false
+		
 		if(xanderGroup.alpha==0)then
 			xanderGroup.alpha = 1
 			timer.performWithDelay(2000,function() transition.to(xanderGroup,{time = 500,alpha = 0})end)

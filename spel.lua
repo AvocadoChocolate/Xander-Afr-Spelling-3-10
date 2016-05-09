@@ -16,6 +16,7 @@ local grTotal = gr3.total()
 local scene = composer.newScene()
 local keyboard = nil
 local myText
+local goingHome = false
 local ishint = false
 local textField
 local tospell = {}
@@ -41,17 +42,19 @@ local isPlaying = false
 local xanderGroup = display.newGroup()
 -----
 local function gotoHome(event)
-	--if(isPlaying)then
-		audio.stop()
+	goingHome = true
+	
+	audio.stop()
+	
+	isPlaying = false
 		
-		isPlaying = false
-	--end
 	transition.to(menuGroup,{time = 100, alpha = 0,onComplete =function() 
 			transition.to(menuGroup,{time = 100, alpha = 1})
 			end})
 		transition.to(spelGroup,{time=500,y = 2*display.contentHeight,onComplete = function() 
 		transition.to(spelGroup,{time=500,y = 0})
 		end})
+		
 		composer.gotoScene("menu",{time = 500,effect="fromTop"}) 
 		addAndSaveIncorrectWords(list)
 		
@@ -76,15 +79,22 @@ local function getNextWord()
 		r = math.random(grTotal)
 		word = gr3.getWord(r)
 		audio.stop()
+		
+		
 		isPlaying = true
-		timer.performWithDelay(500,function()
-		wordSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3" )
-		syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."S.mp3" )
-		wordChannel = audio.play( wordSound ,{onComplete=function()
-		audio.play(syllableSound,{onComplete=function()
-		isPlaying = false end})
-		end})
-		end)
+			timer.performWithDelay(500,function()
+			print(goingHome)
+			if(goingHome==false)then
+			
+			wordSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3" )
+			syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."S.mp3" )
+			wordChannel = audio.play( wordSound ,{onComplete=function()
+			audio.play(syllableSound,{onComplete=function()
+			isPlaying = false end})
+			end})
+			end
+			end)
+		
 		
 		for i=1,#prevWords do
 			if word == prevWords[i] then
@@ -236,7 +246,7 @@ local function redrawKeyboard()
 								speechBox:scale(-(myText.contentWidth+10)/speechBox.contentWidth,yInset*2/speechBox.contentHeight)
 								xanderGroup:insert(speechBox)
 								xanderGroup:insert(myText)
-								timer.performWithDelay(2000,function() transition.to(xanderGroup,{time = 500,alpha = 0,onComplete=function() 
+								timer.performWithDelay(500,function() transition.to(xanderGroup,{time = 500,alpha = 0,onComplete=function() 
 								xander:removeSelf()
 								xander= nil
 								speechBox:removeSelf()
@@ -252,8 +262,8 @@ local function redrawKeyboard()
 									prevWords = {}
 									prevWords[#prevWords + 1] = word
 								end
-								menuGroup:removeEventListener("tap",gotoHome)
-								timer.performWithDelay( 2000, function() 
+								
+								timer.performWithDelay( 500, function() 
 								word = getNextWord()
 								--myText.text = word
 								wordTyped = ""
@@ -268,7 +278,7 @@ local function redrawKeyboard()
 								Correctioncounter = 1
 								correctionTable = {}
 								correction = false
-								menuGroup:addEventListener( "tap", gotoHome )
+								
 								end)
 							end	
 							
@@ -332,7 +342,7 @@ local function redrawKeyboard()
 								speechBox:scale(-(myText.contentWidth+10)/speechBox.contentWidth,yInset*2/speechBox.contentHeight)
 								xanderGroup:insert(speechBox)
 								xanderGroup:insert(myText)
-								timer.performWithDelay(2000,function() transition.to(xanderGroup,{time = 500,alpha = 0,onComplete=function() 
+								timer.performWithDelay(500,function() transition.to(xanderGroup,{time = 500,alpha = 0,onComplete=function() 
 								xander:removeSelf()
 								xander= nil
 								speechBox:removeSelf()
@@ -474,7 +484,7 @@ local function redrawKeyboard()
 												xander = nil
 												speechBox:removeSelf()
 												speechBox=nil
-												menuGroup:removeEventListener("tap",gotoHome)
+												
 												timer.performWithDelay( 500, function() 
 												word = getNextWord()
 												--myText.text = word
@@ -490,7 +500,7 @@ local function redrawKeyboard()
 												Correctioncounter = 1
 												correctionTable = {}
 												correction = false
-												menuGroup:addEventListener( "tap", gotoHome )
+
 												end)
 												return true
 											end
@@ -529,8 +539,8 @@ local function redrawKeyboard()
 											prevWords = {}
 											prevWords[#prevWords + 1] = word
 										end
-										menuGroup:removeEventListener("tap",gotoHome)
-										timer.performWithDelay( 2000, function() 
+										
+										timer.performWithDelay( 500, function() 
 										word = getNextWord()
 										--myText.text = word
 										wordTyped = ""
@@ -542,7 +552,7 @@ local function redrawKeyboard()
 										drawLines()
 										counter = 1
 										spelGroup:insert(linesGroup)
-										menuGroup:addEventListener( "tap", gotoHome )
+										
 										end)
 									end
 									if(tonumber(correct)>100)then
@@ -677,7 +687,7 @@ local function redrawKeyboard()
 												xander = nil
 												speechBox:removeSelf()
 												speechBox=nil
-												menuGroup:removeEventListener("tap",gotoHome)
+												
 												timer.performWithDelay( 500, function() 
 												word = getNextWord()
 												-- myText.text = word
@@ -693,7 +703,7 @@ local function redrawKeyboard()
 												Correctioncounter = 1
 												correctionTable = {}
 												correction = false
-												menuGroup:addEventListener( "tap", gotoHome )
+												
 												end)
 												return true
 											end
@@ -732,8 +742,8 @@ local function redrawKeyboard()
 											prevWords = {}
 											prevWords[#prevWords + 1] = word
 										end
-										menuGroup:removeEventListener("tap",gotoHome)
-										timer.performWithDelay( 2000, function() 
+										
+										timer.performWithDelay( 500, function() 
 										word = getNextWord()
 										-- myText.text = word
 										wordTyped = ""
@@ -745,7 +755,7 @@ local function redrawKeyboard()
 										drawLines()
 										counter = 1
 										spelGroup:insert(linesGroup)
-										menuGroup:addEventListener( "tap", gotoHome )
+										
 										end)
 									end
 									if(tonumber(correct)>100)then
@@ -774,8 +784,8 @@ local function redrawKeyboard()
 									end
 								end
 								if(correction==false)then
-									menuGroup:removeEventListener("tap",gotoHome)
-									timer.performWithDelay( 2000, function() 
+									
+									timer.performWithDelay( 500, function() 
 									word = getNextWord()
 									myText.text = word
 									wordTyped = ""
@@ -787,7 +797,7 @@ local function redrawKeyboard()
 									drawLines()
 									counter = 1 
 									spelGroup:insert(linesGroup)
-									menuGroup:addEventListener( "tap", gotoHome )
+									
 									end)
 								else
 									--Add word to incorrect words list
@@ -914,6 +924,7 @@ function scene:show( event )
 		-- e.g. start timers, begin animation, play audio, etc.
 		--math.randomseed( os.time() )
 		print(cur)
+		goingHome = false
 		drawLines()
 		redrawKeyboard()
 		if(isPlaying==false)then
