@@ -266,19 +266,23 @@ end
 local function Next()
 
 		audio.stop()
+		wordSound = nil
+		syllableSound = nil
 		isPlaying = false
 		word = getNextWord()
 		
 		
-		
+		isPlaying = true
 		timer.performWithDelay(500,function()
 		if(goingHome == false)then
-		isPlaying = true
+		
 		wordSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3" )
 		syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."S.mp3" )
-		wordChannel = audio.play( wordSound ,{onComplete= function() 
+		wordChannel = audio.play( wordSound ,{onComplete= function()
+		
 		audio.play( syllableSound ,{onComplete= function()
 		isPlaying = false end})
+		
 		end})
 		end
 		end)
@@ -367,7 +371,7 @@ local function Next()
 					
 						tick.alpha = 1
 						wordComplete = true
-						timer.performWithDelay(2500,function()
+						timer.performWithDelay(300,function()
 						linesGroup:removeSelf()
 						linesGroup=nil
 						linesGroup = display.newGroup()
