@@ -258,9 +258,8 @@ local function handleSwipe( event )
 						swipeImg.alpha = 0.4
 						flashGroup:insert(swipeImg)
 						transition.to(swipeImg,{time=1000,x = display.contentWidth / 2 - xInset * 2.5,alpha=1,onComplete = function()
-						transition.to(swipeImg,{time=1000,delay=100,x = display.contentWidth / 2 + xInset * 2.5,alpha=0.4,onComplete=function()
-						swipeImg.alpha=0
-						end})
+						transition.to(swipeImg,{time=500,alpha=0})
+						
 						end})
 					end
 					end})
@@ -306,9 +305,7 @@ local function handleSwipe( event )
 						swipeImg.alpha = 0.4
 						flashGroup:insert(swipeImg)
 						transition.to(swipeImg,{time=1000,x = display.contentWidth / 2 - xInset * 2.5,alpha=1,onComplete = function()
-						transition.to(swipeImg,{time=1000,delay=100,x = display.contentWidth / 2 + xInset * 2.5,alpha=0.4,onComplete=function()
-						swipeImg.alpha=0
-						end})
+						transition.to(swipeImg,{time=500,alpha=0})
 						end})
 					end
 					end})
@@ -349,7 +346,8 @@ function scene:create( event )
 	    bg.anchorX =0
 	    bg.anchorY =0
 		--bg.x = -xInset*2
-	    bg:setFillColor(1)
+	    bg.alpha = 0
+		bg.isHitTestable= true
 	    sceneGroup:insert(bg)
 		local xander = display.newImage("2.png")
 		xander.x = display.contentWidth - xInset*2
@@ -475,9 +473,7 @@ function scene:create( event )
 						swipeImg.alpha = 0.4
 						flashGroup:insert(swipeImg)
 						transition.to(swipeImg,{time=1000,x = display.contentWidth / 2 - xInset * 2.5,alpha=1,onComplete = function()
-						transition.to(swipeImg,{time=1000,delay=100,x = display.contentWidth / 2 + xInset * 2.5,alpha=0.4,onComplete=function()
-						swipeImg.alpha=0
-						end})
+						transition.to(swipeImg,{time=500,alpha=0})
 						end})
 					end
 		end})
