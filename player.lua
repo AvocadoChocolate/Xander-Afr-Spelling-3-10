@@ -380,16 +380,188 @@ function scene:show( event )
 		sceneGroup:insert(tableView)
 		local function addPlayer(event)
 			menuGroup:removeEventListener("tap", addPlayer)
-			local back = display.newRect(0,0,display.contentWidth,display.contentWidth)
-			back.anchorX = 0
-			back.anchorY = 0
-			back:setFillColor(0)
-			back.alpha = 0.4
+			
+		
+			local back =display.newImage("background.png")--display.newRect(0,0,display.contentWidth,display.contentWidth) --
+			
+			back.anchorX =0
+			back.anchorY =0
+			back:scale(display.contentWidth/back.contentWidth,display.contentHeight/back.contentHeight)
+			--back.anchorX = 0
+			--back.anchorY = 0
+			--back:setFillColor(1)
+			--back.alpha = 0.4
 			local function block(event)
 						return true
 					end
-					back:addEventListener("tap",block)
+			back:addEventListener("tap",block)
 			sceneGroup:insert(back)
+			local options = 
+			{
+				--parent = row,
+				text = "Kies jou graad",     
+				--x = 0,
+				--y = 200,
+				--width = 128,     --required for multi-line and alignment
+				font = "TeachersPet",   
+				fontSize = 28,
+				align = "right"  --new alignment parameter
+			}
+
+			myText = display.newText( options )
+			myText.anchorX =0.5
+			myText.anchorY =0
+			myText.alpha = 1
+			myText.x = display.contentWidth  / 2
+			myText.y = yInset
+			myText:setFillColor( 0 )
+			sceneGroup:insert(myText)
+			local curOption = nil
+			local function customRadioButtonTap(event)
+				if(curOption.gr~=event.target.gr)then
+					curOption:setFillColor(0.7)
+					event.target:setFillColor(255/255, 51/255, 204/255)
+					curOption = event.target
+				end
+				return true
+			end
+			local option1 = display.newRoundedRect(xInset*3.5,yInset * 3,xInset*3,yInset*2,4)
+			option1.anchorX = 0.5
+			option1.anchorY = 0
+			option1:setFillColor( 255/255, 51/255, 204/255)
+			option1.gr = 3
+			sceneGroup:insert(option1)
+			curOption = option1
+			option1:addEventListener("tap",customRadioButtonTap)
+			local options = 
+			{
+				--parent = row,
+				text = "3",     
+				--x = 0,
+				--y = 200,
+				--width = 128,     --required for multi-line and alignment
+				font = "TeachersPet",   
+				fontSize = 26,
+				align = "right"  --new alignment parameter
+			}
+
+			myText = display.newText( options )
+			myText.anchorX =0.5
+			myText.anchorY =0
+			myText.alpha = 1
+			myText.x = xInset*3.5
+			myText.y = yInset * 3 + myText.contentHeight / 4
+			myText:setFillColor(1)
+			sceneGroup:insert(myText)
+			local option2 = display.newRoundedRect(xInset*6.5 + 10,yInset * 3,xInset*3,yInset*2,4)
+			option2.anchorX = 0.5
+			option2.anchorY = 0
+			option2:setFillColor( 0.7)
+			option2.gr = 4
+			sceneGroup:insert(option2)
+			option2:addEventListener("tap",customRadioButtonTap)
+			local options = 
+			{
+				--parent = row,
+				text = "4",     
+				--x = 0,
+				--y = 200,
+				--width = 128,     --required for multi-line and alignment
+				font = "TeachersPet",   
+				fontSize = 26,
+				align = "right"  --new alignment parameter
+			}
+
+			myText = display.newText( options )
+			myText.anchorX =0.5
+			myText.anchorY =0
+			myText.alpha = 1
+			myText.x = xInset*6.5 + 10
+			myText.y = yInset * 3 + myText.contentHeight / 4
+			myText:setFillColor(1)
+			sceneGroup:insert(myText)
+			local option3 = display.newRoundedRect(xInset*9.5 + 20,yInset * 3,xInset*3,yInset*2,4)
+			option3.anchorX = 0.5
+			option3.anchorY = 0
+			option3:setFillColor( 0.7)
+			option3.gr = 5
+			sceneGroup:insert(option3)
+			option3:addEventListener("tap",customRadioButtonTap)
+			local options = 
+			{
+				--parent = row,
+				text = "5",     
+				--x = 0,
+				--y = 200,
+				--width = 128,     --required for multi-line and alignment
+				font = "TeachersPet",   
+				fontSize = 26,
+				align = "right"  --new alignment parameter
+			}
+
+			myText = display.newText( options )
+			myText.anchorX =0.5
+			myText.anchorY =0
+			myText.alpha = 1
+			myText.x = xInset*9.5 + 20
+			myText.y = yInset * 3 + myText.contentHeight / 4
+			myText:setFillColor(1)
+			sceneGroup:insert(myText)
+			local option4 = display.newRoundedRect(xInset*12.5 + 30,yInset * 3,xInset*3,yInset*2,4)
+			option4.anchorX = 0.5
+			option4.anchorY = 0
+			option4:setFillColor( 0.7)
+			option4.gr = 6
+			sceneGroup:insert(option4)
+			option4:addEventListener("tap",customRadioButtonTap)
+			local options = 
+			{
+				--parent = row,
+				text = "6",     
+				--x = 0,
+				--y = 200,
+				--width = 128,     --required for multi-line and alignment
+				font = "TeachersPet",   
+				fontSize = 26,
+				align = "right"  --new alignment parameter
+			}
+
+			myText = display.newText( options )
+			myText.anchorX =0.5
+			myText.anchorY =0
+			myText.alpha = 1
+			myText.x = xInset*12.5 + 30
+			myText.y = yInset * 3 + myText.contentHeight / 4
+			myText:setFillColor(1)
+			sceneGroup:insert(myText)
+			local option5 = display.newRoundedRect(xInset*15.5 + 40,yInset * 3,xInset*3,yInset*2,4)
+			option5.anchorX = 0.5
+			option5.anchorY = 0
+			option5:setFillColor( 0.7)
+			option5.gr = 7
+			sceneGroup:insert(option5)
+			option5:addEventListener("tap",customRadioButtonTap)
+			local options = 
+			{
+				--parent = row,
+				text = "7",     
+				--x = 0,
+				--y = 200,
+				--width = 128,     --required for multi-line and alignment
+				font = "TeachersPet",   
+				fontSize = 26,
+				align = "right"  --new alignment parameter
+			}
+
+			myText = display.newText( options )
+			myText.anchorX =0.5
+			myText.anchorY =0
+			myText.alpha = 1
+			myText.x = xInset*15.5 + 40
+			myText.y = yInset * 3 + myText.contentHeight / 4
+			myText:setFillColor(1)
+			sceneGroup:insert(myText)
+			
 			local customeTextbox  = display.newRoundedRect(display.contentWidth / 2,display.contentHeight - yInset*14,xInset*10,yInset*2,4)
 			customeTextbox.anchorX = 0.5
 			customeTextbox.anchorY = 0
@@ -400,7 +572,7 @@ function scene:show( event )
 			local options = 
 			{
 				--parent = row,
-				text = "Enter Player Name",     
+				text = "Jou speler naam",     
 				--x = 0,
 				--y = 200,
 				--width = 128,     --required for multi-line and alignment
@@ -440,7 +612,7 @@ function scene:show( event )
 						if(myText.text~="Enter Player Name")then
 							local val = {}
 							val.name =myText.text
-							val.grade ="3"
+							val.grade =curOption.gr
 							val.correct ="0"
 							val.incorrect = "0"
 							plaersList[#plaersList+1]=val

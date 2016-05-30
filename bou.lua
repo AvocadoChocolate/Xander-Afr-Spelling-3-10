@@ -45,6 +45,7 @@ local counter = 1
 local wordsGroup = display.newGroup()
 local linesGroup = display.newGroup()
 local bouGroup = display.newGroup()
+local playersList = getPlayers()
 local tick
 local wordSound
 local syllableSound
@@ -52,6 +53,7 @@ local wordChannel
 local isPlaying = false
 local wordComplete = false
 local wordpos = 34
+local firstCorrect = true
 local function gotoHome(event)
 	--composer.gotoScene("menu")
 	
@@ -60,6 +62,10 @@ local function gotoHome(event)
 		audio.stop()
 		
 		isPlaying = false
+		playersList[cur].grade = grade
+	playersList[cur].correct = correct
+	playersList[cur].incorrect = incorrect
+	addAndSavePlayers(playersList)
 	--end
 	goingHome = true
 	transition.to(menuGroup,{time = 100, alpha = 0,onComplete =function() 
@@ -384,7 +390,12 @@ local function Next()
 						mpieces ={}
 						tospell = {}
 						canvas ={}
+						-----------------------------------------------------------------------------------------------------Check grade and score for graduation prompt
+						if(firstCorrect)then
+						correct = correct + 1
+						end
 						--isPlaying = true
+						firstCorrect = true
 						Next()
 						--isPlaying = true
 						end)
@@ -395,7 +406,7 @@ local function Next()
 						counter = counter + 1
 					end
 				else
-					
+					firstCorrect = false
 					transition.to(event.target,{time =120 ,rotation= 1,x =  sX + 0.1,iterations = 3,onRepeat =function() 
 						transition.to(event.target,{time =120 ,rotation = -1,x= sX - 0.10})
 					end,onComplete =function() transition.to(event.target,{time =6,rotation = 0 ,x=sX}) end})
@@ -560,6 +571,11 @@ function scene:hide( event )
 		
 			audio.stop()
 			isPlaying = false
+			--addAndSaveIncorrectWords(list)
+			playersList[cur].grade = grade
+			playersList[cur].correct = correct
+			playersList[cur].incorrect = incorrect
+			addAndSavePlayers(playersList)
 		
     end 
 end
@@ -572,6 +588,11 @@ function scene:destroy( event )
     -- 
     -- INSERT code here to cleanup the scene
     -- e.g. remove display objects, remove touch listeners, save state, etc
+	--addAndSaveIncorrectWords(list)
+	playersList[cur].grade = grade
+	playersList[cur].correct = correct
+	playersList[cur].incorrect = incorrect
+	addAndSavePlayers(playersList)
 end
 
 ---------------------------------------------------------------------------------

@@ -370,6 +370,16 @@ local function redrawKeyboard()
 									
 									if(tonumber(correct)<=100)then
 									correct = correct + 1
+									local alreadyContainsWordpos = -1
+									for i=1,#list do
+										if(word==list[i])then
+											alreadyContainsWordpos = i
+										end
+									end
+									if(alreadyContainsWordpos~=-1)then
+										table.remove(list, alreadyContainsWordpos)
+									end
+									
 									end
 									if(tonumber(correct)==100)then
 									----------------------------------------------------------------------------------------Graduate Grade 1
@@ -573,6 +583,15 @@ local function redrawKeyboard()
 								else
 									if(tonumber(correct)<= 100)then
 									correct = correct + 1
+									local alreadyContainsWordpos = -1
+									for i=1,#list do
+										if(word==list[i])then
+											alreadyContainsWordpos = i
+										end
+									end
+									if(alreadyContainsWordpos~=-1)then
+										table.remove(list, alreadyContainsWordpos)
+									end
 									end
 									if(tonumber(correct)== 100)then
 									------------------------------------------------------------------------------------Graduate Grade 1
