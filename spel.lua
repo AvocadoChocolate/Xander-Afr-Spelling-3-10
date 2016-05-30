@@ -578,7 +578,7 @@ local function redrawKeyboard()
 										end)
 									end
 									if(tonumber(correct)>100)then
-									correct = grTotal
+									correct = 100
 									end
 								else
 									if(tonumber(correct)<= 100)then

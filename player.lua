@@ -609,7 +609,7 @@ function scene:show( event )
 						k:destroy()
 						k=nil
 						--Use myText------------------------------------
-						if(myText.text~="Enter Player Name")then
+						if(myText.text~="Jou speler naam")then
 							local val = {}
 							val.name =myText.text
 							val.grade =curOption.gr
