@@ -50,10 +50,12 @@ local tick
 local wordSound
 local syllableSound
 local wordChannel
+local lookingFor
 local isPlaying = false
 local wordComplete = false
 local wordpos = 34
 local firstCorrect = true
+local developerMode = false
 local function gotoHome(event)
 	--composer.gotoScene("menu")
 	
@@ -256,6 +258,7 @@ local function drawLines()
 			myText:setFillColor( 0, 0, 0 )
 			myText.pos = k
 			tospell[i] = myText
+			--tospell[i].dashWidth = dash.contentWidth
 			linesGroup:insert(tospell[i])
 			i=i+1
 		end
@@ -683,6 +686,198 @@ local function Next()
 			end
 			
 			--
+			local function drag( event )
+				if event.phase == "began" then
+					collided = false
+					markX = event.target.x    -- store x location of object
+					markY = event.target.y    -- store y location of object
+				lookingFor = ""
+				for i=1,#tospell do
+					if(tospell[i].pos==counter)then
+						lookingFor = lookingFor..tospell[i].text
+					end
+				end
+				if(developerMode)then
+				-------------------------------------------------------------------------------------------------------------------------------Determin correct drop area bounds
+					for d = 1,#pieces do
+						local yPos = linesGroup.y -yInset*1.5-- tospell[1].y
+						local xPos = 0
+						local stX = nil
+						for i=1,#tospell do
+								if(d==tospell[i].pos)then
+									xPos = xPos + tospell[i].contentWidth + xInset/2
+									if(stX == nil)then
+										stX = linesGroup.x - (linesGroup.contentWidth / 2) + tospell[i].x - xInset/4
+									end
+								end
+						end
+						xPos = xPos + xInset
+						-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+						-- print(" event.target.x" .. (event.x ))
+						-- print(" event.target.y" .. event.y)
+						-- print("stX :"..stX)
+						-- print("stX + xPos = "..(stX + xPos))
+						-- print(" event.target.x" .. event.target.x)
+						-- print("yPos :"..yPos)
+						-- print("xPos :"..xPos)
+						-- print(lookingFor)
+						local myRectangle = display.newRect(stX,yPos + yInset*2 ,xPos,yInset*4)
+						myRectangle.strokeWidth = 3
+						myRectangle:setFillColor( 0.5,0 )
+						myRectangle:setStrokeColor( 1, 0, 0 )
+						myRectangle:toFront()
+						bouGroup:insert(myRectangle)
+					end
+				end
+					display.getCurrentStage():setFocus( event.target )
+				elseif event.phase == "moved" then
+				
+					local x = (event.x - event.xStart) + markX
+					local y = (event.y - event.yStart) + markY
+					
+					event.target.x, event.target.y = x, y    -- move object based on calculations above
+				elseif event.phase == "ended" or event.phase == "cancelled" then
+					event.target.alpha = 1
+					-------------------------------------------------------------------------------------------------------------------------------Determin correct drop area bounds
+					local yPos = linesGroup.y -yInset*1.5 --+ tospell[1].y
+					local xPos = 0
+					local stX = nil
+					local pLen = 0
+					for i=1,#tospell do
+							if(counter==tospell[i].pos)then
+								xPos = xPos + tospell[i].contentWidth + xInset/2
+								pLen = pLen + 1
+								if(stX == nil)then
+									stX = linesGroup.x - (linesGroup.contentWidth / 2) + tospell[i].x - xInset/4
+								end
+							end
+					end
+					if(pLen == 1)then
+						stX = stX - xInset/4
+					end
+					xPos = xPos + xInset
+					-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+					-- print(" event.target.x" .. (event.x ))
+					-- print(" event.target.y" .. event.y)
+					-- print("stX :"..stX)
+					-- print("stX + xPos = "..(stX + xPos))
+					-- print(" event.target.x" .. event.target.x)
+					-- print("yPos :"..yPos)
+					-- print("xPos :"..xPos)
+					-- print(lookingFor)
+					-- local myRectangle = display.newRect(stX,yPos + yInset*2 ,xPos,yInset*4)
+					-- myRectangle.strokeWidth = 3
+					-- myRectangle:setFillColor( 0.5,0 )
+					-- myRectangle:setStrokeColor( 1, 0, 0 )
+					-- myRectangle:toFront()
+					-- bouGroup:insert(myRectangle)
+					local bool =  event.x < stX + xPos and event.x > stX - xInset/2 and event.y > yPos + yInset and event.y < yPos + yInset*5 
+					print(bool)
+					if( bool) then
+					-- if(event.target.pos~= nil)then
+						-- if(hasCollided(event.target,event.target.rectangle))then
+							-- event.target.alpha = 0
+							-- tospell[event.target.pos].alpha = 1
+							-- collided = true
+					
+						-- end
+					
+						
+					-- end
+					if(lookingFor == event.target.t)then
+						event.target.alpha = 0
+						for i=1,#tospell do
+							if(counter==tospell[i].pos)then
+								tospell[i].alpha = 1
+							end
+						end
+						if(counter == #pieces)then
+						
+							tick.alpha = 1
+							wordComplete = true
+							timer.performWithDelay(300,function()
+							linesGroup:removeSelf()
+							linesGroup=nil
+							linesGroup = display.newGroup()
+							wordsGroup:removeSelf()
+							wordsGroup = nil
+							wordsGroup = display.newGroup()
+							bouGroup:insert(wordsGroup)
+							bouGroup:insert(linesGroup)
+							pieces = {}
+							mpieces ={}
+							tospell = {}
+							canvas ={}
+							--Confirm grade is less then 7
+							if(tonumber(grade) < 7)then
+								--Can add to score
+								if(tonumber(correct)<=100)then
+									if(firstCorrect)then
+									correct = correct + 1
+									end
+									--isPlaying = true
+									firstCorrect = true
+								end
+								--Score has been reached can graduate
+								if(tonumber(correct)==100)then
+									graduate()
+								
+								
+								end
+								--User has chose to continue on this level
+								if(tonumber(correct)>100)then
+										correct = 100
+								end
+							else
+								--Can add to score
+								if(tonumber(correct)<=100)then
+									if(firstCorrect)then
+										correct = correct + 1
+									end
+									--isPlaying = true
+									firstCorrect = true
+								end
+								--Score has been reached can graduate
+								if(tonumber(correct)==100)then
+									graduate()
+								end
+								--User has chose to continue on this level
+								if(tonumber(correct)>100)then
+										correct = 100
+								end
+							end
+							
+							Next()
+							--isPlaying = true
+							end)
+							
+							
+							counter = 1
+						else
+							counter = counter + 1
+						end
+					else
+						firstCorrect = false
+						transition.to(event.target,{time = 500,x=markX,y=markY})
+						-- sX = event.target.x
+						-- transition.to(event.target,{time =120 ,rotation= 1,x =  sX + 0.1,iterations = 3,onRepeat =function() 
+							-- transition.to(event.target,{time =120 ,rotation = -1,x= sX - 0.10})
+						-- end,onComplete =function() transition.to(event.target,{time =6,rotation = 0 ,x=sX}) end})
+					end
+				else
+					transition.to(event.target,{time = 500,x=markX,y=markY})
+				end
+					if(event.x > xInset*18 or event.x < xInset * 2)then
+							transition.to(event.target,{time = 500,x=markX,y=markY})
+						
+					elseif(event.y>yInset*15 or event.y < yInset)then
+							transition.to(event.target,{time = 500,x=markX,y=markY})
+					end
+					display.getCurrentStage():setFocus(nil)
+				end
+				
+				return true
+			end
 			if(c<5)then
 				c=c+1
 				color =unpack(colors,c)
@@ -703,7 +898,7 @@ local function Next()
 			canvas[#canvas+1] = rect 
 			wordsGroup:insert(pieceGroup)
 			
-			pieceGroup:addEventListener( "touch", myTap )
+			pieceGroup:addEventListener( "touch", drag )
 		end
 end
 function scene:create( event )
