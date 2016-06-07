@@ -35,6 +35,7 @@ local colors ={{51/255, 204/255, 51/255},
 {204/255, 102/255, 255/255}
 }
 local keyboard = nil
+local began
 local prevWords = {}
 local canvas ={}
 local pieces = {}
@@ -688,9 +689,10 @@ local function Next()
 			--
 			local function drag( event )
 				if event.phase == "began" then
-					collided = false
-					markX = event.target.x    -- store x location of object
-					markY = event.target.y    -- store y location of object
+				collided = false
+				began = true
+				markX = event.target.x    -- store x location of object
+				markY = event.target.y    -- store y location of object
 				lookingFor = ""
 				for i=1,#tospell do
 					if(tospell[i].pos==counter)then
@@ -732,12 +734,15 @@ local function Next()
 					display.getCurrentStage():setFocus( event.target )
 				elseif event.phase == "moved" then
 				
+					if(began)then
 					local x = (event.x - event.xStart) + markX
 					local y = (event.y - event.yStart) + markY
 					
 					event.target.x, event.target.y = x, y    -- move object based on calculations above
+					end
 				elseif event.phase == "ended" or event.phase == "cancelled" then
 					event.target.alpha = 1
+					began = false
 					-------------------------------------------------------------------------------------------------------------------------------Determin correct drop area bounds
 					local yPos = linesGroup.y -yInset*1.5 --+ tospell[1].y
 					local xPos = 0
