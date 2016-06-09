@@ -108,7 +108,7 @@ local function getNextWord()
 		end
 	end
 	
-	word = string.gsub( word, "%-","")
+	--word = string.gsub( word, "%-","")
 	word = string.lower( word )
 	if(#prevWords < 5) then
 		prevWords[#prevWords+1] = word
@@ -521,7 +521,7 @@ local function Next()
 		if(goingHome == false)then
 		
 		wordSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3" )
-		syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."S.mp3" )
+		syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."s.mp3" )
 		wordChannel = audio.play( wordSound ,{onComplete= function()
 		
 		audio.play( syllableSound ,{onComplete= function()
@@ -970,7 +970,7 @@ function scene:create( event )
 			end})
 			if(isPlaying==false)then
 				wordSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3" )
-				syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3" )
+				syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."s.mp3" )
 				isPlaying = true
 				wordChannel = audio.play( wordSound ,{onComplete=function()
 				audio.play( syllableSound ,{onComplete=function()
@@ -1013,7 +1013,7 @@ function scene:show( event )
 		if(isPlaying==false)then
 			timer.performWithDelay(500,function()
 			wordSound = audio.loadSound("sound/graad"..grade.."/"..word..".mp3" )
-			syllableSound = audio.loadSound("sound/graad"..grade.."/"..word..".mp3" )
+			syllableSound = audio.loadSound("sound/graad"..grade.."/"..word.."s.mp3" )
 			isPlaying = true
 			wordChannel = audio.play( wordSound ,{onComplete=function()
 			audio.play( syllableSound ,{onComplete=function()

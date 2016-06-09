@@ -488,7 +488,7 @@ function scene:create( event )
 						if(myText.text~="Jou speler naam")then
 							local val = {}
 							val.name =myText.text
-							val.grade ="3"
+							val.grade = curOption.gr
 							val.correct ="0"
 							val.incorrect = "0"
 							cur = 1

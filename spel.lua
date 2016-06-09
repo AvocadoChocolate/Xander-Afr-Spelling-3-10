@@ -79,8 +79,10 @@ local function getNextWord()
 		check = false
 		r = math.random(grTotal)
 		word = gr3.getWord(r)
-		
-		
+		change = string.gsub( word, "%-","")
+		if(change~=word)then
+			check = true
+		end
 		for i=1,#prevWords do
 			if word == prevWords[i] then
 				check =true
@@ -101,7 +103,7 @@ local function getNextWord()
 	if(goingHome==false)then
 	
 	wordSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3" )
-	syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."S.mp3" )
+	syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."s.mp3" )
 	wordChannel = audio.play( wordSound ,{onComplete=function()
 	if(isPlaying)then
 	audio.play(syllableSound,{onComplete=function()
@@ -305,7 +307,7 @@ local function redrawKeyboard()
 						elseif(event.key == "sound")then
 							if(isPlaying==false)then
 								wordSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3"  )
-								syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."S.mp3"  )
+								syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."s.mp3"  )
 								isPlaying = true
 								wordChannel = audio.play( wordSound ,{onComplete=function()
 								if(isPlaying==true)then
@@ -961,7 +963,7 @@ function scene:show( event )
 		if(isPlaying==false)then
 			timer.performWithDelay(500,function()
 			wordSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3"  )
-			syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3"  )
+			syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."s.mp3"  )
 			isPlaying = true
 			wordChannel = audio.play( wordSound ,{onComplete=function()
 			audio.play(syllableSound,{onComplete=function()
@@ -1013,11 +1015,7 @@ function scene:destroy( event )
 			keyboard:destroy()
 			keyboard = nil
 		end
-	addAndSaveIncorrectWords(list)
-	playersList[cur].grade = grade
-	playersList[cur].correct = correct
-	playersList[cur].incorrect = incorrect
-	addAndSavePlayers(playersList)
+	
 end
 
 ---------------------------------------------------------------------------------

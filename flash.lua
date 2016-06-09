@@ -77,7 +77,7 @@ local function getNextWord()
 			end
 		end
 	end
-	word = string.gsub( word, "%-","")
+	--word = string.gsub( word, "%-","")
 	word = string.lower( word )
 	return word
 end
@@ -244,7 +244,7 @@ local function handleSwipe( event )
 					word = prevWords[cur]
 					timer.performWithDelay(500,function()
 					wordSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3" )
-					syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."S.mp3" )
+					syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."s.mp3" )
 					isPlaying = true
 					wordChannel = audio.play( wordSound ,{onComplete=function()
 					audio.play(syllableSound,{onComplete=function()
@@ -291,7 +291,7 @@ local function handleSwipe( event )
 					word = getNextWord()
 					timer.performWithDelay(500,function()
 					wordSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3" )
-					syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."S.mp3" )
+					syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."s.mp3" )
 					isPlaying = true
 					wordChannel = audio.play( wordSound ,{onComplete=function()
 					audio.play(syllableSound,{onComplete=function()
@@ -400,7 +400,7 @@ function scene:create( event )
 			end})
 			if(isPlaying==false)then
 				wordSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3" )
-				syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."S.mp3" )
+				syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."s.mp3" )
 				
 				isPlaying = true
 				wordChannel = audio.play( wordSound ,{onComplete=function()
@@ -457,7 +457,7 @@ function scene:create( event )
 		isPlaying = true
 		timer.performWithDelay(500,function()
 		wordSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3" )
-		syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."S.mp3" )
+		syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."s.mp3" )
 		wordChannel = audio.play( wordSound ,{onComplete=function()
 		audio.play(syllableSound,{onComplete=function()
 		isPlaying=false 
@@ -507,7 +507,7 @@ function scene:show( event )
 		if(isPlaying==false)then
 			timer.performWithDelay(500,function()
 			wordSound = audio.loadSound( "sound/graad"..grade.."/"..word..".mp3" )
-			syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."S.mp3" )
+			syllableSound = audio.loadSound( "sound/graad"..grade.."/"..word.."s.mp3" )
 			isPlaying = true
 			
 			wordChannel = audio.play( wordSound ,{onComplete=function()
