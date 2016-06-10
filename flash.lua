@@ -78,7 +78,7 @@ local function getNextWord()
 		end
 	end
 	--word = string.gsub( word, "%-","")
-	word = string.lower( word )
+	--word = string.lower( word )
 	return word
 end
 

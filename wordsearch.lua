@@ -92,6 +92,9 @@ local function getNextWord()
 		if string.len(word)>11 then
 				check =true
 		end
+		if(word ~= string.lower( word ))then
+			check =true
+		end
 		for i=1,#words do
 			if word == words[i] then
 				check =true
@@ -99,7 +102,7 @@ local function getNextWord()
 		end
 	end
 	--word = string.gsub( word, "%-","")
-	word = string.lower( word )
+	--word = string.lower( word )
 	print(word)
 	return word
 end

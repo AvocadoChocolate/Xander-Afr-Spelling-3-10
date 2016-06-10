@@ -117,7 +117,7 @@ local function getNextWord()
 	end)
 	
 	word = string.gsub( word, "%-","")
-	word = string.lower( word )
+	--word = string.lower( word )
 	return word
 end
 if(word==nil)then
@@ -192,7 +192,18 @@ local function redrawKeyboard()
 		
 		
 		keyboard = onScreenKeyboard:new()
+		
+		case = string.lower(word:sub(1,1))
+		caseType = nil
+		if(case == word:sub(1,1))then
+		--is lower
 		keyboard:drawKeyBoard(keyboard.keyBoardMode.letters_small)
+		caseType = "lower"
+		else
+		--is upper
+		keyboard:drawKeyBoard(keyboard.keyBoardMode.letters_large)
+		caseType = "upper"
+		end
 		
 		
 		local enable = {"del","sound"}
@@ -214,6 +225,7 @@ local function redrawKeyboard()
         --create a listener function that receives the events of the keyboard
         local listener = function(event)
             if(event.phase == "ended")  then
+					
 					if(correction)then
 						if(Correctioncounter<=#correctionTable)then
 							local text = keyboard:getText()
@@ -851,7 +863,20 @@ local function redrawKeyboard()
 							end
 						end
 						counter = counter + 1
-						
+						case = string.lower(word:sub(counter,counter))
+						if(case == word:sub(counter,counter))then
+						--is lower
+							if(caseType ~="lower")then
+							keyboard:drawKeyBoard(keyboard.keyBoardMode.letters_small)
+							caseType ="lower"
+							end
+						else
+						--is upper
+							if(caseType ~="upper") then
+							keyboard:drawKeyBoard(keyboard.keyBoardMode.letters_large)
+							caseType="upper"
+							end
+						end
 						
 						end
 					else

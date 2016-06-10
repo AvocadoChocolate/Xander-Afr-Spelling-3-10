@@ -62,10 +62,10 @@ local function gotoHome(event)
 	
 	print(isPlaying)
 	--if(isPlaying)then
-		audio.stop()
+	audio.stop()
 		
-		isPlaying = false
-		playersList[cur].grade = grade
+	isPlaying = false
+	playersList[cur].grade = grade
 	playersList[cur].correct = correct
 	playersList[cur].incorrect = incorrect
 	addAndSavePlayers(playersList)
@@ -109,7 +109,7 @@ local function getNextWord()
 	end
 	
 	--word = string.gsub( word, "%-","")
-	word = string.lower( word )
+	--word = string.lower( word )
 	if(#prevWords < 5) then
 		prevWords[#prevWords+1] = word
 	else
