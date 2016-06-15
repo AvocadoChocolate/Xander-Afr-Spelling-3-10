@@ -133,7 +133,7 @@ function scene:show( event )
 					composer.gotoScene("menu",{time = 500,effect = "fade"})
 					return true
 				end
-				rowBox:addEventListener("tap",selectPlayer)
+				--rowBox:addEventListener("tap",selectPlayer)
 				local rowTitle = display.newText( row,plaersList[row.index].name, 0, 0,"TeachersPet", 24 )
 				rowTitle:setFillColor( 0,0,0,0.5 )
 		
@@ -145,11 +145,41 @@ function scene:show( event )
 				local rowTitle = display.newText( row,"Graad: "..plaersList[row.index].grade , 0, 0,"TeachersPet", 24 )
 				rowTitle:setFillColor( 0,0,0,0.5  )
 				
+				
 				--Align the label left and vertically centered
 				rowTitle.anchorX = 0
 				rowTitle.anchorY = 0
-				rowTitle.x = display.contentWidth/2 - xInset*2
+				rowTitle.x = display.contentWidth/2 - xInset*3
 				rowTitle.y = rowHeight * 0.5
+				local downArrow = display.newImage(row,"XanderDownArrow.png")
+				local upArrow = display.newImage(row,"XanderUpArrow.png")
+				downArrow:scale((rowHeight * 0.3)/downArrow.contentWidth,(rowHeight * 0.3)/downArrow.contentHeight)
+				upArrow:scale((rowHeight * 0.3)/upArrow.contentWidth,(rowHeight * 0.3)/upArrow.contentHeight)
+				downArrow.x = display.contentWidth/2 
+				downArrow.y = rowHeight * 0.8
+				upArrow.x = display.contentWidth/2 
+				upArrow.y = rowHeight * 0.4
+				local function incrementGrade(event)
+					if(tonumber(plaersList[row.index].grade) < tonumber(plaersList[row.index].maxgrade))then
+					plaersList[row.index].grade = plaersList[row.index].grade + 1
+					grade = plaersList[row.index].grade
+					rowTitle.text = "Graad: "..plaersList[row.index].grade
+					addAndSavePlayers(plaersList)
+					end
+					return true
+				end
+				local function decrementGrade(event)
+					if(tonumber(plaersList[row.index].grade) > 3) then
+						plaersList[row.index].grade = plaersList[row.index].grade - 1
+						grade = plaersList[row.index].grade
+						rowTitle.text = "Graad: "..plaersList[row.index].grade
+						addAndSavePlayers(plaersList)
+					end
+					return true
+				end
+				
+				downArrow:addEventListener("tap",decrementGrade)
+				upArrow:addEventListener("tap",incrementGrade)
 				if(tonumber(plaersList[row.index].correct) == 100 )then
 					local graduate = display.newImage(row,"grad2.png")
 					graduate:scale(rowHeight*0.7/graduate.width,rowHeight*0.7/graduate.width)
@@ -162,6 +192,7 @@ function scene:show( event )
 						plaersList[row.index].grade = tonumber(grade)+1
 						plaersList[row.index].correct = 0
 						plaersList[row.index].incorrect = 0
+						plaersList[row.index].maxgrade = plaersList[row.index].grade
 						
 						if(cur ~=  row.index)then
 						
@@ -171,6 +202,7 @@ function scene:show( event )
 						player = plaersList[row.index].name
 						grade = plaersList[row.index].grade
 						correct = plaersList[row.index].correct
+						maxGrade = plaersList[row.index].maxgrade
 						incorrect = 0
 						list ={}
 						addAndSaveIncorrectWords(list)
@@ -181,14 +213,14 @@ function scene:show( event )
 					end
 					graduate:addEventListener("tap",grad)
 				else
-					local rowTitle = display.newText( row,plaersList[row.index].correct.." / ".. "100", 0, 0,"TeachersPet", 24 )
-					rowTitle:setFillColor( 0,0,0,0.5)
+					local scoreTxt = display.newText( row,plaersList[row.index].correct.." / ".. "100", 0, 0,"TeachersPet", 24 )
+					scoreTxt:setFillColor( 0,0,0,0.5)
 
 					--Align the label left and vertically centered
-					rowTitle.anchorX = 0
-					rowTitle.anchorY = 0
-					rowTitle.x = xInset*12
-					rowTitle.y = rowHeight *0.5
+					scoreTxt.anchorX = 0
+					scoreTxt.anchorY = 0
+					scoreTxt.x = xInset*12
+					scoreTxt.y = rowHeight *0.5
 					--Draw small pink line
 				end
 				
@@ -340,6 +372,7 @@ function scene:show( event )
 							grade = plaersList[1].grade
 							correct = plaersList[1].correct
 							incorrect = plaersList[1].incorrect
+							maxGrade = plaersList[1].maxgrade
 							cur = 1
 							end
 						end
@@ -615,11 +648,13 @@ function scene:show( event )
 							val.grade =curOption.gr
 							val.correct ="0"
 							val.incorrect = "0"
+							val.maxGrade = curOption.gr
 							plaersList[#plaersList+1]=val
 							player = myText.text
-							grade = "3"
-							correct ="0"
-							incorrect ="0"
+							grade = val.grade
+							correct = "0"
+							incorrect = "0"
+							maxGrade = val.grade
 							cur = #plaersList
 							addAndSavePlayers(plaersList)
 							composer.removeScene("player")

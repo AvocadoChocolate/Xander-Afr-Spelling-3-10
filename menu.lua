@@ -489,6 +489,7 @@ function scene:create( event )
 							local val = {}
 							val.name =myText.text
 							val.grade = curOption.gr
+							val.maxgrade = curOption.gr
 							val.correct ="0"
 							val.incorrect = "0"
 							cur = 1
@@ -498,6 +499,7 @@ function scene:create( event )
 							grade = val.grade
 							correct = val.correct
 							incorrect = val.incorrect
+							maxGrade = val.maxgrade
 							addAndSavePlayers(plaersList)
 							composer.removeScene("menu",{time=500,effect="fade"})
 							composer.gotoScene("menu",{time=500,effect="fade"})

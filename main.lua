@@ -44,14 +44,16 @@ function getPlayers()
 		local val ={}
 		for line in file:lines() do
 			
-			if((i+3) - math.floor((i+3)/4)*4==0)then
+			if((i+4) - math.floor((i+4)/5)*5==0)then
 				val.name = line
-			elseif((i+2) - math.floor((i+2)/4)*4==0) then
+			elseif((i+3) - math.floor((i+3)/5)*5==0) then
 				val.grade = line
-			elseif((i+1) - math.floor((i+1)/4)*4==0) then
+			elseif((i+2) - math.floor((i+2)/5)*5==0) then
 				val.correct = line
-			elseif(i - math.floor(i/4)*4==0)then
+			elseif((i+1) - math.floor((i+1)/5)*5==0)then
 				val.incorrect = line
+			elseif(i-math.floor((i/5))*5==0) then
+				val.maxgrade = line
 				playersList[x] = val
 				val ={}
 				x = x+1
@@ -87,6 +89,8 @@ function addAndSavePlayers(playersList)
 			file:write("\n")
 			file:write( playersList[i].incorrect )
 			file:write("\n")
+			file:write( playersList[i].maxgrade )
+			file:write("\n")
 			
 		end
 		-- Close the file handle
@@ -102,11 +106,13 @@ if(players[1]==nil)then
 	correct = 0
 	incorrect = 0
 	cur = 0
+	maxGrade = ""
 else
 	player = players[1].name
 	grade =players[1].grade
 	correct = players[1].correct
 	incorrect = players[1].incorrect
+	maxGrade = players[1].maxgrade
 	cur = 1
 end
 composer.gotoScene( "menu" )
