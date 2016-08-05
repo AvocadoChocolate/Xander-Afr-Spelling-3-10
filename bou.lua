@@ -56,6 +56,7 @@ local isPlaying = false
 local wordComplete = false
 local wordpos = 34
 local firstCorrect = true
+local range = 10
 local developerMode = false
 local function gotoHome(event)
 	--composer.gotoScene("menu")
@@ -776,7 +777,7 @@ local function Next()
 					-- myRectangle:setStrokeColor( 1, 0, 0 )
 					-- myRectangle:toFront()
 					-- bouGroup:insert(myRectangle)
-					local bool =  event.x < stX + xPos and event.x > stX - xInset/2 and event.y > yPos + yInset and event.y < yPos + yInset*5 
+					local bool =  event.x-range < stX + xPos+range and event.x+range > stX - xInset/2 - range and event.y+range > yPos + yInset-range and event.y-range< yPos + yInset*5 + range 
 					print(bool)
 					if( bool) then
 					-- if(event.target.pos~= nil)then

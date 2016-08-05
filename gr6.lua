@@ -71,7 +71,7 @@ local words ={
 "isreal",
 "kafeteria",
 "kalmeermiddel",
-"kampionskappe",
+"kampieonskappe",
 "kansellasie",
 "kilojoule",
 "knysnawoud",
